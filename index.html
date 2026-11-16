@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Tantalus · Playbook Board</title>
+<style>
+:root{--bg:#000000;--panel:#124020;--main:#247f3f;--light:#82c498;--red:#e5484d;--txt:#ffffff;--muted:#82c498;--bd:#247f3f}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--bg);color:var(--txt);font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+.wrap{max-width:560px;margin:0 auto;padding:10px 10px 28px}
+header{display:flex;gap:8px;align-items:center;margin-bottom:8px}
+header input{flex:1;min-width:0;background:var(--panel);border:1px solid var(--bd);color:var(--txt);border-radius:10px;padding:10px 12px;font-size:16px;font-weight:600}
+.tag{background:#124020;color:#82c498;border-radius:999px;padding:8px 12px;font-size:14px;font-weight:600;white-space:nowrap}
+#court.full,.ph svg.full{width:auto;max-width:100%;max-height:76vh;margin:0 auto;display:block}
+#court{width:100%;height:auto;display:block;touch-action:none;border-radius:12px;background:#82c498;user-select:none;-webkit-user-select:none}
+.hint{color:var(--muted);font-size:13px;min-height:18px;margin:7px 2px}
+.tools{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+button{font:inherit;font-size:14px;border:1px solid var(--bd);background:var(--panel);color:var(--txt);border-radius:10px;padding:11px 4px;cursor:pointer}
+button.on{background:var(--main);border-color:var(--light)}
+button.primary{background:var(--light);border-color:var(--light);color:#000000;font-weight:600}
+button.danger{border-color:#6b2a2d;color:#ff9a9d}
+.span2{grid-column:span 2}
+.span4{grid-column:1/-1}
+button.addDef{color:#ff9a9d}
+#editBar{display:none;grid-template-columns:repeat(3,1fr);gap:6px;align-items:center;background:#124020;border:1px solid #82c498;border-radius:10px;padding:6px;margin-bottom:8px}
+#editBar span{color:#82c498;font-weight:600;font-size:14px;text-align:center}
+#editBar button.off{opacity:.35}
+.ph .edit{margin-top:8px;width:100%}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+.chip{font-size:12px;padding:6px 10px;border-radius:999px;background:#124020;color:#82c498;border:none}
+.chip.on{background:var(--main);color:#ffffff}
+.chip.lock{opacity:.6}
+.chip.red{color:#ff9a9d}
+#optTabs{margin:0 0 8px}
+#optTabs .chip,.chip.add{font-size:13px;padding:8px 12px}
+.chip.add{border:1px dashed var(--light)}
+.chips span{font-size:12px;color:var(--muted);align-self:center}
+.legend{font-size:12px;color:var(--muted);margin-top:10px;line-height:1.5}
+#review,#lib{position:fixed;inset:0;background:var(--bg);overflow:auto;display:none;z-index:10}
+.ph{background:var(--panel);border-radius:12px;padding:10px;margin:10px 0}
+.ph h3{margin:2px 2px 8px;font-size:15px}
+.ph .meta{font-size:12px;color:var(--muted);margin:-4px 2px 8px}
+.ph .row{margin:6px 0 0}
+.ph svg{width:100%;height:auto;border-radius:8px;background:#82c498}
+.ph ol{margin:8px 0 2px;padding-left:22px;font-size:14px;line-height:1.45}
+.ph .start{font-size:12px;color:var(--muted);margin:6px 2px 0}
+textarea{width:100%;min-height:170px;background:var(--panel);color:var(--txt);border:1px solid var(--bd);border-radius:10px;padding:10px;font:13px/1.4 ui-monospace,Menlo,Consolas,monospace}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:10px 0}
+.ok{color:#82c498;font-size:13px;min-height:18px}
+#note{min-height:0;height:58px;font:14px/1.4 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;margin:0 0 8px;resize:vertical}
+#note::placeholder,#team::placeholder{color:#82c498;opacity:.8}
+.ph .note{font-size:14px;line-height:1.45;margin:8px 2px 0}
+.field{display:flex;align-items:center;gap:8px;margin:8px 0}
+.field label{font-size:13px;color:var(--muted);white-space:nowrap}
+.field input{flex:1;min-width:0;background:var(--panel);border:1px solid var(--bd);color:var(--txt);border-radius:10px;padding:9px 12px;font-size:16px}
+.ph .row.three{grid-template-columns:1fr 1fr 1fr}
+#print{display:none}
+@media print{
+  @page{size:A4;margin:12mm 12mm 14mm}
+  html,body{background:#ffffff!important;color:#000000}
+  body>*:not(#print):not(svg){display:none!important}
+  #print{display:block;font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;color:#000000;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
+#print .cover{height:265mm;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;border:4mm solid #124020;break-after:page}
+#print .cover svg{width:70mm;height:auto}
+#print .cover h1{font-size:40pt;margin:8mm 0 2mm;color:#124020}
+#print .cover .sub{font-size:15pt;color:#247f3f;margin-bottom:9mm}
+#print .cover ol{list-style:none;padding:0;margin:0;font-size:12.5pt;line-height:1.75;text-align:left}
+#print .cover ol span{color:#247f3f;font-weight:700;display:inline-block;width:8mm}
+#print .cover ol em{font-style:normal;color:#247f3f;font-size:10pt;margin-left:2mm}
+#print .cover .leg{font-size:8pt;line-height:1.5;color:#124020;margin:12mm 14mm 0}
+#print .cover .date{font-size:9.5pt;color:#247f3f;margin-top:4mm}
+#print section{break-before:page}
+#print .cover+section{break-before:auto}
+#print .head{display:flex;align-items:baseline;justify-content:space-between;border-bottom:1.2mm solid #124020;padding-bottom:2.5mm;margin-bottom:4mm}
+#print .head h2{font-size:24pt;margin:0;color:#124020}
+#print .head div{font-size:9.5pt;color:#247f3f;font-weight:700}
+#print .prow{display:flex;gap:6mm;margin-bottom:4.5mm;break-inside:avoid}
+#print .card{width:calc(50% - 3mm)}
+#print .band{font-size:10.5pt;color:#ffffff;background:#124020;border-radius:1.5mm;padding:1.5mm 2.5mm;margin:0 0 1.5mm}
+#print .band.bA{background:#247f3f}
+#print .band small{font-size:8pt;color:#82c498;margin-left:2mm}
+#print .card h3{font-size:11pt;margin:0 0 1.3mm;color:#247f3f}
+#print .card svg{width:100%;height:auto;display:block;border-radius:2mm}
+#print .card svg.full{width:auto;height:150mm;margin:0 auto}
+#print .card p{font-size:9.5pt;line-height:1.38;margin:1.8mm 0 0}
+#print .card ol{font-size:8.6pt;line-height:1.34;margin:1.6mm 0 0;padding-left:4.6mm}
+h2{font-size:18px;margin:6px 2px}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><image id="tlogo" width="106" height="116" href="data:image/png;base64,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"/></defs></svg>
+<div class="wrap" id="main">
+  <header>
+    <input id="name" placeholder="Play name (e.g. UP)" autocomplete="off">
+    <button class="tag" id="courtBtn">Full court</button>
+    <span class="tag" id="phaseTag">Phase 1</span>
+  </header>
+  <div class="chips" id="optTabs"></div>
+  <svg id="court" viewBox="-12 -12 524 491" xmlns="http://www.w3.org/2000/svg"></svg>
+  <div class="hint" id="hint"></div>
+  <textarea id="note" placeholder="Explain this phase in a sentence or two (shown in the PDF)"></textarea>
+  <div id="editBar"><button id="editPrev">◀</button><span id="editLbl"></span><button id="editNext">▶</button><button id="editSave" class="primary">Save</button><button id="editDel" class="danger">Delete</button><button id="editCancel">Cancel</button></div>
+  <div class="tools">
+    <button data-tool="move">Set start</button>
+    <button data-tool="pass">Pass</button>
+    <button data-tool="cut">Cut</button>
+    <button data-tool="dribble">Dribble</button>
+    <button data-tool="screen">Screen</button>
+    <button data-tool="handoff">Hand-off</button>
+    <button id="shot">Shot</button>
+    <button id="undo">Undo</button>
+    <button id="clear">Clear lines</button>
+    <button id="def">Show defense</button>
+    <button data-tool="adddef" class="addDef">+ Defender</button>
+    <button data-tool="rotate" class="addDef">↻ Defender</button>
+    <button id="openLib">My plays</button>
+    <button id="saveBtn">Save play</button>
+    <button id="openReview" class="span2">Review phases</button>
+    <button id="next" class="primary span4">Next phase ⏎</button>
+  </div>
+  <div class="chips" id="chips"></div>
+  <div class="legend">Pass = dashed arrow · Cut = solid arrow · Dribble = zigzag · Screen = line ending in T · Hand-off = line ending in ‖ · Shot = double-line arrow to the basket. Dashed circles show where a player ends the phase. The light green border is out of bounds, for sideline and baseline plays. + Option = a second ending that shares the first phases. Plain red circle = added defender (only in that phase); the arc and white arrow show where she is facing.</div>
+</div>
+
+<div id="review">
+  <div class="wrap">
+    <div class="row" style="margin-top:4px"><button id="back">← Back to board</button><button id="rvPdf" class="primary">PDF of this play</button></div>
+    <h2 id="rvTitle"></h2>
+    <div id="rvPhases"></div>
+  </div>
+</div>
+
+<div id="lib">
+  <div class="wrap">
+    <div class="row" style="margin-top:4px;grid-template-columns:1fr 1fr 1fr"><button id="libBack">← Board</button><button id="libSave">Save current</button><button id="libNew" class="primary">+ New play</button></div>
+    <h2>My plays</h2>
+    <div class="field"><label for="team">Team</label><input id="team" placeholder="Your team name (shown in the PDF)" autocomplete="off"></div>
+    <div class="row" style="grid-template-columns:1fr 1fr 1fr"><button id="pdfAll" class="primary">Playbook PDF</button><button id="expBtn">Export</button><button id="impBtn">Import</button></div>
+    <input type="file" id="impFile" accept=".json,application/json" style="display:none">
+    <div class="hint" id="backup"></div>
+    <div class="ok" id="libMsg"></div>
+    <div class="hint" id="libStatus"></div>
+    <div id="libList"></div>
+  </div>
+</div>
+
+<div id="print"></div>
+
+<script>
+const BX=250,BY=52,H=467;
+const ATT=['1','2','3','4','5'],DEF=['X1','X2','X3','X4','X5'];
+const INIT={'1':{x:250,y:330},'2':{x:440,y:205},'3':{x:60,y:205},'4':{x:18,y:70},'5':{x:325,y:188}};
+const $=s=>document.querySelector(s);
+const svg=$('#court');
+const isExtra=id=>id[0]==='D';
+const isDef=id=>id[0]==='X'||isExtra(id);
+const vis=st=>ATT.concat(st.showDef?DEF:[],st.extra||[]);
+const dist=(a,b)=>Math.hypot(a.x-b.x,a.y-b.y);
+const defFor=p=>({x:p.x+(BX-p.x)*0.22,y:p.y+(BY-p.y)*0.22});
+
+function freshState(){const players={};for(const k of ATT){players[k]={...INIT[k]};players['X'+k]=defFor(INIT[k]);}
+  return {name:'',players,ballAtStart:'1',lines:[],phases:[],showDef:false,defStale:false,extra:[],dn:0,face:{},full:false,note:'',opts:[{label:'A',from:null,at:0,own:[],cur:null,sig:null}],oi:0};}
+let S=null;try{S=JSON.parse(localStorage.getItem('tpb-board'));}catch(e){}
+if(!S||!S.players)S=freshState();
+if(!S.opts){S.opts=[{label:'A',from:null,at:0,own:[],cur:null,sig:null}];S.oi=0;}
+let tool='move',drag=null,choosing=false,delArmed=false;const hist=[];
+
+function save(){try{localStorage.setItem('tpb-board',JSON.stringify(S));}catch(e){}}
+function push(){hist.push(JSON.stringify(S));if(hist.length>300)hist.shift();}
+function hint(m){$('#hint').textContent=m;}
+const HINTS={rotate:'Touch an added defender and drag towards where she is looking. A tap turns her 45°.',adddef:'Tap the court where the defender stands. One tap = one defender.',move:'Set start: drag players (and defenders) to their starting spots. Drag the ball onto a player to give her the ball. Nothing is drawn. Drag an added defender to the edge of the board to remove her.',handoff:'Drag from the ball handler to the receiver — or from the receiver to the ball handler if she waits with the ball.',pass:'Drag from the passer to the receiver.',cut:'Drag from a player along the cut path.',dribble:'Drag from the ball handler along the dribble path.',screen:'Drag from the screener to the screen spot. A short flick = she holds the screen where she is.'};
+
+function projOf(st,id){let p=st.players[id];for(const l of st.lines)if(l.who===id&&l.type!=='pass'&&!l.stay)p=l.pts[l.pts.length-1];return p;}
+function holderOf(st){let b=st.ballAtStart;for(const l of st.lines)if((l.type==='pass'||l.type==='handoff')&&l.to)b=l.to;return b;}
+function nearest(p,ids,pos,max,ex){let best=null,bd=max;for(const id of ids){if(id===ex)continue;const d=dist(p,pos(id));if(d<bd){bd=d;best=id;}}return best;}
+
+/* ---------- court ---------- */
+const LC='#124020';
+const FH=933.4,M=40;  /* M = out-of-bounds margin around the court */
+const HALFM=`<rect x="168.3" y="0" width="163.4" height="193" fill="#8a5a2b" fill-opacity="0.2" stroke="${LC}" stroke-width="2"/>
+<path d="M190 193 A60 60 0 0 0 310 193" fill="none" stroke="${LC}" stroke-width="2"/>
+<path d="M190 193 A60 60 0 0 1 310 193" fill="none" stroke="${LC}" stroke-width="2" stroke-dasharray="7 6"/>
+<path d="M30 0 L30 99 A225 225 0 0 0 470 99 L470 0" fill="none" stroke="${LC}" stroke-width="2"/>
+<path d="M208.3 52 A41.7 41.7 0 0 0 291.7 52" fill="none" stroke="${LC}" stroke-width="1.5"/>
+<line x1="220" y1="40" x2="280" y2="40" stroke="#000000" stroke-width="3"/>
+<line x1="250" y1="40" x2="250" y2="44.5" stroke="#000000" stroke-width="2"/>
+<circle cx="250" cy="52" r="7.5" fill="none" stroke="#e8590c" stroke-width="2.2"/>`;
+function courtSvg(full){const h=full?FH:H;
+  return `<defs><pattern id="wood" width="52" height="1000" patternUnits="userSpaceOnUse"><rect width="26" height="1000" fill="#e6c594"/><rect x="26" width="26" height="1000" fill="#e0bd89"/><path d="M0 0V1000M26 0V1000" stroke="#c8a06c" stroke-width="0.7"/></pattern></defs>
+<rect x="${-M}" y="${-M}" width="${500+2*M}" height="${h+M+(full?M:12)}" fill="#82c498"/>
+<rect x="0" y="0" width="500" height="${h}" fill="url(#wood)" stroke="${LC}" stroke-width="2"/>
+<clipPath id="${full?'ccf':'cch'}"><rect x="0" y="0" width="500" height="${h}"/></clipPath><g clip-path="url(#${full?'ccf':'cch'})" opacity="0.5"><use href="#tlogo" x="197" y="${(full?FH/2:H)-58}"/></g>
+${HALFM}`+(full?`<g transform="translate(0 ${FH}) scale(1 -1)">${HALFM}</g><line x1="0" y1="${FH/2}" x2="500" y2="${FH/2}" stroke="${LC}" stroke-width="2"/><circle cx="250" cy="${FH/2}" r="60" fill="none" stroke="${LC}" stroke-width="2"/>`
+    :`<path d="M190 467 A60 60 0 0 1 310 467" fill="none" stroke="${LC}" stroke-width="2"/>`);}
+const COURT_H=courtSvg(false),COURT_F=courtSvg(true);
+const vb=()=>`${-M} ${-M} ${500+2*M} ${(S.full?FH:H)+M+(S.full?M:12)}`;
+
+/* ---------- geometry ---------- */
+function trim(pts,d){pts=pts.map(p=>({x:p.x,y:p.y}));while(pts.length>1&&d>0){const a=pts[pts.length-2],b=pts[pts.length-1],s=dist(a,b);
+  if(s<=d){pts.pop();d-=s;}else{const t=(s-d)/s;pts[pts.length-1]={x:a.x+(b.x-a.x)*t,y:a.y+(b.y-a.y)*t};d=0;}}return pts;}
+function resample(pts,step){const out=[pts[0]];let acc=0;for(let i=1;i<pts.length;i++){let a=pts[i-1];const b=pts[i];let s=dist(a,b);
+  while(s>0&&acc+s>=step){const t=(step-acc)/s;const n={x:a.x+(b.x-a.x)*t,y:a.y+(b.y-a.y)*t};out.push(n);a=n;s=dist(a,b);acc=0;}acc+=s;}
+  const L=pts[pts.length-1];if(dist(out[out.length-1],L)>0.5)out.push(L);return out;}
+function simplify(pts){const o=[pts[0]];for(const p of pts)if(dist(p,o[o.length-1])>=6)o.push(p);const L=pts[pts.length-1];if(o[o.length-1]!==L)o.push(L);return o;}
+function smoothPath(p){if(p.length<3)return `M${p[0].x} ${p[0].y} L${p[p.length-1].x} ${p[p.length-1].y}`;let d=`M${p[0].x} ${p[0].y}`;
+  for(let i=1;i<p.length-1;i++){const m={x:(p[i].x+p[i+1].x)/2,y:(p[i].y+p[i+1].y)/2};d+=` Q${p[i].x} ${p[i].y} ${m.x} ${m.y}`;}
+  const L=p[p.length-1];return d+` L${L.x} ${L.y}`;}
+function dirAtEnd(p){const tip=p[p.length-1];let i=p.length-2;while(i>0&&dist(p[i],tip)<10)i--;const a=p[i];const s=dist(a,tip)||1;return {tip,dx:(tip.x-a.x)/s,dy:(tip.y-a.y)/s};}
+function arrow(p,col){const {tip,dx,dy}=dirAtEnd(p);const bx=tip.x-dx*12,by=tip.y-dy*12;
+  return `<polygon points="${tip.x},${tip.y} ${bx-dy*6},${by+dx*6} ${bx+dy*6},${by-dx*6}" fill="${col}"/>`;}
+
+function lineSvg(l,noTrim){
+  const col=isDef(l.who)?'#b42318':'#000000';
+  if(l.type==='shot'){const q=trim(l.pts,10);if(q.length<2||dist(q[0],q[1])<34)return '';const L=dist(q[0],q[1]),dx=(q[1].x-q[0].x)/L,dy=(q[1].y-q[0].y)/L,ex=q[1].x-dx*10,ey=q[1].y-dy*10,sx=q[0].x+dx*16,sy=q[0].y+dy*16;
+    return [3,-3].map(k=>`<line x1="${sx-dy*k}" y1="${sy+dx*k}" x2="${ex-dy*k}" y2="${ey+dx*k}" stroke="${col}" stroke-width="2" stroke-linecap="round"/>`).join('')+arrow(q,col);}
+  let p=l.pts;
+  if(!noTrim&&!l.noTrim&&(l.type!=='pass'||l.to))p=trim(p,l.stay?15:17);
+  if(p.length<2||dist(p[0],p[p.length-1])<3)return '';
+  const st=`stroke="${col}" stroke-width="2.6" fill="none" stroke-linecap="round" stroke-linejoin="round"`;
+  if(l.type==='pass'){const L=p[p.length-1];return `<path d="M${p[0].x} ${p[0].y} L${L.x} ${L.y}" ${st} stroke-dasharray="9 7"/>`+arrow([p[0],L],col);}
+  if(l.type==='cut')return `<path d="${smoothPath(p)}" ${st}/>`+arrow(p,col);
+  if(l.type==='dribble'){const r=resample(p,7);if(r.length<5)return `<path d="${smoothPath(p)}" ${st}/>`+arrow(p,col);
+    const z=r.map((q,i)=>{if(i===0||i>=r.length-3)return q;const a=r[i-1],b=r[i+1];const s=dist(a,b)||1;const nx=-(b.y-a.y)/s,ny=(b.x-a.x)/s;const k=(i%2?5:-5);return {x:q.x+nx*k,y:q.y+ny*k};});
+    return `<polyline points="${z.map(q=>q.x.toFixed(1)+','+q.y.toFixed(1)).join(' ')}" ${st}/>`+arrow(r,col);}
+  if(l.type==='handoff'){const {tip,dx,dy}=dirAtEnd(p);let o=`<path d="${smoothPath(p)}" ${st}/>`;
+    for(const k of [0,6]){const cx=tip.x-dx*k,cy=tip.y-dy*k;o+=`<line x1="${cx-dy*9}" y1="${cy+dx*9}" x2="${cx+dy*9}" y2="${cy-dx*9}" stroke="${col}" stroke-width="3" stroke-linecap="round"/>`;}return o;}
+  const {tip,dx,dy}=dirAtEnd(p);
+  return `<path d="${smoothPath(p)}" ${st}/><line x1="${tip.x-dy*12}" y1="${tip.y+dx*12}" x2="${tip.x+dy*12}" y2="${tip.y-dx*12}" stroke="${col}" stroke-width="3.4" stroke-linecap="round"/>`;
+}
+const faceOf=id=>(S.face||{})[id]||0;
+function faceDefault(q){const a=nearest(q,ATT,i=>projOf(S,i),1e9),t=projOf(S,a);return dist(q,t)<1?90:Math.round(Math.atan2(t.y-q.y,t.x-q.x)*180/Math.PI);}
+function facing(ph,id){const a=faceOf(id)*Math.PI/180,p=ph.players[id],ux=Math.cos(a),uy=Math.sin(a);let best=null,bd=30;
+  const chk=(name,t)=>{const dx=t.x-p.x,dy=t.y-p.y,n=Math.hypot(dx,dy);if(n<1)return;const df=Math.acos(Math.max(-1,Math.min(1,(dx*ux+dy*uy)/n)))*180/Math.PI;if(df<bd){bd=df;best=name;}};
+  for(const k of ATT)chk(k,ph.players[k]);
+  if(!best)chk('the basket',{x:BX,y:BY});
+  return 'facing '+(best||(Math.abs(ux)>Math.abs(uy)?(ux<0?'the left sideline':'the right sideline'):(uy<0?'the baseline':S.full?'the backcourt':'half court')));}
+function playerSvg(id,p,ghost){
+  const d=isDef(id),fill=d?'#e5484d':'#25803f',gcol=d?'#b42318':'#124020',ring=d?'#7a1616':'#124020';
+  if(isExtra(id)){const g=`<g transform="translate(${p.x} ${p.y}) rotate(${faceOf(id)})"`,arc=`<path d="M10.9 -15.6 A19 19 0 0 1 10.9 15.6" fill="none" stroke="${ghost?gcol:fill}" stroke-linecap="round"`;
+    return ghost?`${g} opacity="0.75"><circle r="11" fill="none" stroke="${gcol}" stroke-width="2" stroke-dasharray="4 3"/>${arc} stroke-width="2.5"/></g>`
+      :`${g}>${arc} stroke-width="4.5"/><circle r="12.5" fill="${fill}" stroke="${ring}" stroke-width="1.6"/><polygon points="9,0 2.5,-5 2.5,5" fill="#fff"/></g>`;}
+  if(ghost)return `<g opacity="0.75"><circle cx="${p.x}" cy="${p.y}" r="13" fill="none" stroke="${gcol}" stroke-width="2" stroke-dasharray="4 3"/><text x="${p.x}" y="${p.y+(d?4:5)}" text-anchor="middle" font-size="${d?10:13}" font-weight="700" fill="${gcol}">${id}</text></g>`;
+  return `<circle cx="${p.x}" cy="${p.y}" r="14.5" fill="${fill}" stroke="${ring}" stroke-width="1.6"/><text x="${p.x}" y="${p.y+(d?4:5.5)}" text-anchor="middle" font-size="${d?11:15}" font-weight="700" fill="#fff" font-family="system-ui,sans-serif">${id}</text>`;
+}
+function draw(el,st,o={}){
+  let h=S.full?COURT_F:COURT_H;
+  for(const l of st.lines)h+=lineSvg(l);
+  if(o.temp&&o.temp.pts.length>1)h+=lineSvg(o.temp,true);
+  for(const id of vis(st)){const pp=projOf(st,id);if(dist(pp,st.players[id])>1)h+=playerSvg(id,pp,true);}
+  for(const id of vis(st))h+=playerSvg(id,st.players[id]);
+  const bh=holderOf(st),bp=projOf(st,bh);
+  let rim=false;for(const l of st.lines){if(l.type==='shot')rim=true;else if((l.type==='pass'||l.type==='handoff')&&l.to)rim=false;}
+  if(o.ballAt==='start'&&(bh!==st.ballAtStart||rim)){const sp=st.players[st.ballAtStart];h+=`<circle cx="${sp.x+14}" cy="${sp.y-14}" r="6" fill="none" stroke="#b34700" stroke-width="1.5" stroke-dasharray="3 2" opacity="0.9"/>`;}
+  const b=o.ballDrag||(rim?{x:BX,y:BY}:{x:bp.x+14,y:bp.y-14});
+  h+=`<circle cx="${b.x}" cy="${b.y}" r="6.5" fill="#e8590c" stroke="#000000" stroke-width="1.3"/>`;
+  el.innerHTML=h;
+}
+
+/* ---------- zones & text ---------- */
+function zone(p){
+  if(p.y<0)return 'out of bounds behind the baseline ('+(p.x<250?'left':'right')+' side)';
+  if(p.x<0||p.x>500)return 'out of bounds on the '+(p.x<0?'left':'right')+' sideline';
+  if(S.full&&p.y>FH)return 'out of bounds behind our own baseline';
+  if(S.full&&p.y>H+8)return 'backcourt '+zone({x:p.x,y:Math.min(FH-p.y,H-9)});
+  const d=Math.hypot(p.x-BX,p.y-BY),side=p.x<250?'left':'right';
+  if(p.y>H-8)return S.full?'midcourt':'backcourt';
+  if(d<55)return 'under the basket';
+  const out=p.y<=99?(p.x<30||p.x>470):d>225;
+  if(out){if(p.y<115)return side+' corner';if(p.x>180&&p.x<320)return 'top';return side+' wing';}
+  if(Math.hypot(p.x-168,p.y-193)<40)return 'left elbow';
+  if(Math.hypot(p.x-332,p.y-193)<40)return 'right elbow';
+  if(p.x>=168&&p.x<=332){if(p.y>230)return 'top of the key';if(p.y>150)return 'high post';if(p.y<120)return side+' low post';return side+' mid post';}
+  if(p.y<115)return side+' short corner';
+  return side+' mid-range wing';
+}
+function describe(ph){
+  const cur={};for(const id in ph.players)cur[id]={...ph.players[id]};
+  const start=vis(ph).map(id=>`${isExtra(id)?'Defender':id} ${zone(ph.players[id])}${id===ph.ballAtStart?' (ball)':''}${isExtra(id)?', '+facing(ph,id):''}`);
+  const acts=ph.lines.map(l=>{const w=l.who,e=l.pts[l.pts.length-1],A=zone(cur[w]),B=zone(e);let s;
+    if(l.type==='shot')s=`${w} shoots from ${A}`;
+    else if(l.type==='handoff'){if(l.stay)s=`${w} waits with the ball and hands off to ${l.to} (${zone(cur[w])})`;else{s=`${w} hands off to ${l.to} (${zone(cur[l.to])})`;cur[w]={x:e.x,y:e.y};}}
+    else if(l.type==='pass')s=l.to?`${w} passes to ${l.to} (${zone(cur[l.to])})`:`${w} passes to ${B}`;
+    else{
+      if(l.type==='cut')s=A===B?`${w} ${isDef(w)?'moves':'relocates'} within ${A}`:`${w} ${isDef(w)?'moves':'cuts'} from ${A} to ${B}`;
+      else if(l.type==='dribble')s=A===B?`${w} dribbles within ${A}`:`${w} dribbles from ${A} to ${B}`;
+      else if(l.stay)s=l.for?`${w} holds a screen for ${l.for} at ${A}`:`${w} holds a screen at ${A}`;
+      else s=l.for?`${w} sets a screen for ${l.for} at ${B}`:`${w} sets a screen at ${B}`;
+      if(!l.stay)cur[w]={x:e.x,y:e.y};
+    }return isExtra(w)?s.replace(w,'Defender'):s;});
+  return {start,acts};
+}
+function allPhases(){
+  if(S.edit){const c=S.edit.cur;return S.phases.concat([curPhase()],S.edit.later,c.lines.length?[c]:[]);}
+  return S.phases.concat(S.lines.length?[curPhase()]:[]);}
+function exportParts(){
+  const multi=S.opts.length>1&&!S.edit;if(multi)park();
+  const R=v=>Math.round(v);
+  const dec=pts=>{if(pts.length<=10)return pts;const o=[];for(let i=0;i<10;i++)o.push(pts[Math.round(i*(pts.length-1)/9)]);return o;};
+  const enc=ph=>{const p={};for(const id of vis(ph))p[id]=[R(ph.players[id].x),R(ph.players[id].y)];
+    const fa={};for(const id of ph.extra||[])fa[id]=faceOf(id);
+    return {b:ph.ballAtStart,d:ph.showDef?1:0,p,...((ph.extra||[]).length?{fa}:{}),...(ph.note?{x:ph.note}:{}),l:ph.lines.map(l=>{const o={t:l.type,w:l.who,pts:dec(l.pts).map(q=>[R(q.x),R(q.y)])};if(l.to)o.to=l.to;if(l.for)o.f=l.for;if(l.stay)o.s=1;return o;})};};
+  const txt=(ph,i)=>{const d=describe(ph);let x=`\nPhase ${i+1}\nStart: ${d.start.join(' · ')}\n`;d.acts.forEach((a,j)=>x+=`${j+1}. ${a}\n`);return x;};
+  let t=`Play: ${S.name||'(no name)'}\nTeam: ${TEAM()||'-'}\n${S.full?'Court: full court (we attack the top basket)\n':''}`;
+  const data={n:S.name||'',...(S.full?{fc:1}:{})};let all;
+  if(!multi){all=allPhases();t+=`Phases: ${all.length}\n`;all.forEach((ph,i)=>t+=txt(ph,i));data.ph=all.map(enc);}
+  else{all=[];t+=`Options: ${S.opts.map(o=>o.label).join(', ')}\n`;data.opt=[];
+    S.opts.forEach((o,i)=>{const phs=fullPath(i);all=all.concat(phs.slice(o.at));
+      t+=`\n=== Option ${o.label}`+(o.from!=null?`: same as Option ${S.opts[o.from].label} up to phase ${o.at}, then`:'')+` ===\n`;
+      phs.forEach((ph,j)=>{if(j>=o.at)t+=txt(ph,j);});
+      if(phs.length<=o.at)t+='(nothing drawn yet)\n';
+      if(o.from==null)data.ph=phs.map(enc);else data.opt.push({k:o.label,from:S.opts[o.from].label,at:o.at,ph:phs.slice(o.at).map(enc)});});
+    t+='\nNOTE opt = extra options. ph is Option A. Each option in opt repeats the first "at" phases of option "from" and then continues with its own ph.\n';}
+  if(all.some(ph=>(ph.extra||[]).length))t+='\nNOTE D1, D2… = added defenders (plain red circle, no number). fa = facing angle in degrees: 0 right sideline, 90 away from the basket we attack, 180 left sideline, -90 the baseline we attack.\n';
+  if(S.full)t+='\nNOTE fc = full court: y runs from 0 (baseline of the basket we attack) to 933 (our own baseline); half-court line at y = 467.\n';
+  return {text:t,data};
+}
+function exportText(){const e=exportParts();return e.text+'\nDATA '+JSON.stringify(e.data)+'\n';}
+
+/* ---------- board ---------- */
+function render(){
+  draw(svg,S,{ballAt:'current',temp:drag&&drag.kind==='draw'?{type:tool,who:drag.id,pts:drag.pts}:null,ballDrag:drag&&drag.kind==='ball'?drag.pos:null});
+  svg.setAttribute('viewBox',vb());svg.classList.toggle('full',!!S.full);$('#courtBtn').textContent=S.full?'Half court':'Full court';
+  const ao=AO(),multi=S.opts.length>1;
+  $('#phaseTag').textContent=(S.edit?'Editing phase ':(multi?ao.label+' · ':'')+'Phase ')+(S.phases.length+1);
+  $('#editBar').style.display=S.edit?'grid':'none';
+  if(S.edit){const i=S.edit.i,tot=i+1+S.edit.later.length,lo=i-1>=ao.at;$('#editLbl').textContent='Editing phase '+(i+1)+' of '+tot;
+    $('#editPrev').textContent=lo?'◀ Phase '+i:'◀';$('#editPrev').classList.toggle('off',!lo);$('#editNext').textContent='Phase '+(i+2)+' ▶';}
+  if(document.activeElement!==$('#note'))$('#note').value=S.note||'';
+  $('#note').placeholder='Explain phase '+(S.edit?S.edit.i+1:S.phases.length+1)+' in a sentence or two (shown in the PDF)';
+  $('#next').textContent=S.edit?'Save phase '+(S.edit.i+1):'Next phase ⏎';
+  document.querySelectorAll('[data-tool]').forEach(b=>b.classList.toggle('on',b.dataset.tool===tool));
+  $('#def').textContent=S.showDef?'Hide defense':'Show defense';
+  $('#def').classList.toggle('on',S.showDef);
+  $('#optTabs').style.display=multi&&!S.edit?'flex':'none';
+  $('#optTabs').innerHTML=multi?S.opts.map((p,i)=>`<button class="chip${i===S.oi?' on':''}" data-opt="${i}">Option ${p.label}</button>`).join('')+`<button class="chip red" data-delopt="1">${delArmed?'Tap again to delete Option '+ao.label:'Delete option'}</button>`:'';
+  $('#chips').innerHTML=S.edit?'':choosing?`<span>New option after:</span>`+S.phases.map((p,i)=>`<button class="chip add" data-after="${i+1}">Phase ${i+1}</button>`).join('')+`<button class="chip" data-cancel="1">Cancel</button>`
+    :S.phases.map((p,i)=>i<ao.at?`<button class="chip lock" data-ph="${i}">Phase ${i+1} · shared</button>`:`<button class="chip" data-ph="${i}">✎ Phase ${i+1} · ${p.lines.length} action${p.lines.length===1?'':'s'}</button>`).join('')+`<button class="chip add" data-add="1">+ Option</button>`;
+  save();
+}
+function toSvg(e){const pt=svg.createSVGPoint();pt.x=e.clientX;pt.y=e.clientY;const q=pt.matrixTransform(svg.getScreenCTM().inverse());return {x:q.x,y:q.y};}
+const clamp=p=>({x:Math.max(16-M,Math.min(484+M,p.x)),y:Math.max(16-M,Math.min((S.full?FH+M-16:H+8),p.y))});
+
+svg.addEventListener('pointerdown',e=>{
+  const p=toSvg(e);drag=null;
+  if(tool==='adddef'){const q=clamp(p);push();S.dn=(S.dn||0)+1;const id='D'+S.dn;S.players[id]=q;S.extra=(S.extra||[]).concat(id);S.face=S.face||{};S.face[id]=faceDefault(q);drag={kind:'player',id,off:{x:0,y:0}};render();}
+  else if(tool==='move'){
+    const bh=holderOf(S),bp=projOf(S,bh);
+    if(dist(p,{x:bp.x+14,y:bp.y-14})<13){drag={kind:'ball',pos:p};}
+    else{const id=nearest(p,vis(S),id=>S.players[id],30);if(id){push();drag={kind:'player',id,off:{x:S.players[id].x-p.x,y:S.players[id].y-p.y}};}}
+  }else if(tool==='rotate'){
+    const id=nearest(p,S.extra||[],id=>S.players[id],40);if(!id){hint('Touch an added defender to rotate her.');return;}
+    push();S.face=S.face||{};drag={kind:'rot',id,moved:false};
+  }else{
+    const pool=(tool==='pass'||tool==='handoff')?ATT:vis(S);
+    const id=nearest(p,pool,id=>projOf(S,id),32);
+    if(!id){hint('Start the line on a player.');return;}
+    const s=projOf(S,id);drag={kind:'draw',id,pts:[{x:s.x,y:s.y}]};
+  }
+  if(drag){try{svg.setPointerCapture(e.pointerId);}catch(_){}}
+  e.preventDefault();
+});
+svg.addEventListener('pointermove',e=>{
+  if(!drag)return;const p=toSvg(e);
+  if(drag.kind==='player'){const id=drag.id,old=S.players[id],np=clamp({x:p.x+drag.off.x,y:p.y+drag.off.y});
+    const moved=S.lines.some(l=>l.who===id&&l.type!=='pass');
+    for(const l of S.lines){if(l.who===id&&dist(l.pts[0],old)<1)l.pts[0]={...np};
+      if(l.to===id&&!moved&&l.type==='pass'){const k=l.pts.length-1;if(dist(l.pts[k],old)<1)l.pts[k]={...np};}}
+    S.players[id]=np;}
+  else if(drag.kind==='ball'){drag.pos=p;}
+  else if(drag.kind==='rot'){const c=S.players[drag.id];if(dist(p,c)>16){drag.moved=true;S.face[drag.id]=Math.round(Math.atan2(p.y-c.y,p.x-c.x)*180/Math.PI);}}
+  else{const L=drag.pts[drag.pts.length-1];const q=clamp(p);if(dist(L,q)>=4)drag.pts.push(q);}
+  render();e.preventDefault();
+});
+function endDrag(e,cancel){
+  if(!drag)return;const d=drag;drag=null;
+  if(cancel){render();return;}
+  if(d.kind==='player'&&isExtra(d.id)){const q=S.players[d.id];
+    if(q.x<19-M||q.x>481+M||q.y<19-M||q.y>(S.full?FH+M-19:H+4)){delete S.players[d.id];if(S.face)delete S.face[d.id];S.extra=(S.extra||[]).filter(i=>i!==d.id);S.lines=S.lines.filter(l=>l.who!==d.id);hint('Defender removed.');}
+    else if(tool==='adddef'){S.face[d.id]=faceDefault(q);hint('Defender added, '+facing(curPhase(),d.id)+'. Use ↻ Defender to turn her.');}
+    if(tool==='adddef')tool='move';}
+  if(d.kind==='rot'){if(!d.moved)S.face[d.id]=((Math.round(faceOf(d.id)/45)*45+45+180)%360+360)%360-180;hint('Defender '+facing(curPhase(),d.id)+'.');}
+  if(d.kind==='ball'){const id=nearest(d.pos,ATT,id=>projOf(S,id),45);if(id&&id!==holderOf(S)){push();S.ballAtStart=id;S.lines=S.lines.filter(l=>!(l.type==='pass'||l.type==='shot'));hint(`Ball to ${id}.`);}}
+  else if(d.kind==='draw'){
+    const s=d.pts[0],end=d.pts[d.pts.length-1];
+    if(dist(s,end)<(tool==='screen'?8:15)){hint('Line too short — drag further.');}
+    else{
+      push();const L={type:tool,who:d.id,pts:simplify(d.pts)};
+      if(tool==='pass'){const r=nearest(end,ATT,id=>projOf(S,id),48,d.id);
+        if(r){const rp=projOf(S,r);L.to=r;L.pts=[{x:s.x,y:s.y},{x:rp.x,y:rp.y}];}else L.pts=[{x:s.x,y:s.y},{x:end.x,y:end.y}];}
+      if(tool==='handoff'&&d.id!==holderOf(S)){const h=holderOf(S);const r0=nearest(end,ATT,id=>projOf(S,id),80,d.id);
+        if(r0!==h){hist.pop();hint('Hand-off: drag from the ball handler, or from the receiver to the ball handler.');render();return;}
+        const hp=projOf(S,h);let pts=L.pts.filter(q=>dist(q,hp)>30);if(!pts.length)pts=[{x:s.x,y:s.y}];
+        const from=pts[pts.length-1];const dd=dist(from,hp)||1;const spot={x:hp.x+(from.x-hp.x)/dd*34,y:hp.y+(from.y-hp.y)/dd*44};pts.push(spot);
+        if(dist(pts[0],spot)>5)S.lines.push({type:'cut',who:d.id,pts});
+        S.lines.push({type:'handoff',who:h,to:d.id,stay:true,pts:[{x:hp.x,y:hp.y},spot]});
+        hint(`${d.id} comes to ${h} for the hand-off.`);render();return;}
+      if(tool==='handoff'){let r=nearest(end,ATT,id=>projOf(S,id),80,d.id);
+        if(!r)r=nearest(end,ATT,id=>S.players[id],80,d.id);
+        if(!r){hist.pop();hint('End the hand-off on a teammate.');render();return;}
+        const rp=projOf(S,r);let pts=L.pts.slice(0,-1);if(!pts.length)pts=[s];const from=pts.length>1?pts[pts.length-2]:s;
+        const dd=dist(from,rp)||1;const spot={x:rp.x+(from.x-rp.x)/dd*30,y:rp.y+(from.y-rp.y)/dd*30};
+        pts=pts.filter(q=>dist(q,rp)>30);if(!pts.length)pts=[{x:s.x,y:s.y}];pts.push(spot);
+        if(dist(pts[0],spot)<5){hist.pop();hint('Hand-off: start further from the receiver.');render();return;}
+        L.pts=pts;L.to=r;}
+      if(tool==='screen'&&dist(s,end)<35){L.stay=true;L.noTrim=true;L.pts=[{x:s.x,y:s.y},{x:end.x,y:end.y}];}
+      if(tool==='screen'&&!isExtra(d.id)){const mates=isDef(d.id)?DEF:ATT;const r=nearest(end,mates,id=>projOf(S,id),65,d.id);if(r)L.for=r;}
+      S.lines.push(L);
+      hint(describe(curPhase()).acts.slice(-1)[0]);
+    }
+  }
+  render();
+}
+svg.addEventListener('pointerup',e=>endDrag(e,false));
+svg.addEventListener('pointercancel',e=>endDrag(e,true));
+
+function projAt(st,id,k){let p=st.players[id];for(let i=0;i<k;i++){const l=st.lines[i];if(l.who===id&&l.type!=='pass'&&!l.stay)p=l.pts[l.pts.length-1];}return p;}
+function endOf(ph){const e={};for(const id in ph.players){if(isExtra(id))continue;const q=projOf(ph,id);e[id]={x:q.x,y:q.y};}return {players:e,ball:holderOf(ph)};}
+function rechain(ph,end){
+  const dl={},old=ph.players;for(const id in end.players){const a=ph.players[id]||end.players[id];dl[id]={x:end.players[id].x-a.x,y:end.players[id].y-a.y};}
+  ph.players=JSON.parse(JSON.stringify(end.players));for(const id of ph.extra||[])if(old[id])ph.players[id]=old[id];ph.ballAtStart=end.ball;
+  ph.lines.forEach((l,k)=>{const d=dl[l.who]||{x:0,y:0};
+    if(l.type==='pass'){const a=projAt(ph,l.who,k);const b=l.to?projAt(ph,l.to,k):{x:l.pts[1].x+d.x,y:l.pts[1].y+d.y};l.pts=[{x:a.x,y:a.y},{x:b.x,y:b.y}];}
+    else if(l.type==='shot'){const a=projAt(ph,l.who,k);l.pts=[{x:a.x,y:a.y},{x:BX,y:BY}];}
+    else l.pts=l.pts.map(q=>({x:q.x+d.x,y:q.y+d.y}));});
+  return ph;
+}
+function curPhase(){return {players:S.players,ballAtStart:S.ballAtStart,lines:S.lines,showDef:S.showDef,extra:S.extra||[],note:S.note||''};}
+function relink(end,same,oldEnd){
+  const e=S.edit;
+  /* later phases move by how much the end before them moved, so a start the coach set by hand stays as it was */
+  const shift=(ph,oe,ne)=>{if(!oe)return ne;const pl={};for(const id in ne.players){const a=ph.players[id],o=oe.players[id],n=ne.players[id];pl[id]=a&&o?{x:a.x+n.x-o.x,y:a.y+n.y-o.y}:{x:n.x,y:n.y};}
+    return {players:pl,ball:ne.ball===oe.ball?ph.ballAtStart:ne.ball};};
+  for(const lp of e.later){if(!same){const o2=endOf(lp);rechain(lp,shift(lp,oldEnd,end));oldEnd=o2;}S.phases.push(lp);end=endOf(lp);}
+  const c=same?e.cur:rechain(e.cur,shift(e.cur,oldEnd,end));S.players=c.players;S.ballAtStart=c.ballAtStart;S.lines=c.lines;S.showDef=c.showDef;S.defStale=c.defStale;S.extra=c.extra||[];S.note=c.note||'';S.edit=null;
+}
+/* ---------- options (branches that share the first phases) ---------- */
+const clone=o=>JSON.parse(JSON.stringify(o));
+const AO=()=>S.opts[S.oi];
+function park(){const o=AO();o.own=clone(S.phases.slice(o.at));o.cur=clone({players:S.players,ballAtStart:S.ballAtStart,lines:S.lines,showDef:S.showDef,defStale:S.defStale,extra:S.extra||[],note:S.note||''});}
+function pathOf(i){const o=S.opts[i];let base=[];
+  if(o.from!=null){base=clone(pathOf(o.from).slice(0,o.at));
+    if(base.length){const end=endOf(base[base.length-1]),sig=JSON.stringify(end);
+      if(sig!==o.sig){let e=end;for(const ph of o.own){rechain(ph,e);e=endOf(ph);}rechain(o.cur,e);o.sig=sig;}}}
+  return base.concat(o.own);}
+function fullPath(i){const o=S.opts[i];return pathOf(i).concat(o.cur&&o.cur.lines.length?[o.cur]:[]);}
+function loadOpt(i){S.oi=i;S.phases=clone(pathOf(i));const c=clone(S.opts[i].cur);
+  S.players=c.players;S.ballAtStart=c.ballAtStart;S.lines=c.lines;S.showDef=c.showDef;S.defStale=c.defStale;S.extra=c.extra||[];S.note=c.note||'';}
+function switchOpt(i){
+  if(S.edit){hint('Finish editing the phase first.');return;}
+  if(i===S.oi)return;
+  push();park();loadOpt(i);render();const o=AO();
+  hint(`Option ${o.label}`+(o.from!=null?`: same as Option ${S.opts[o.from].label} up to phase ${o.at}.`:'.'));
+}
+function addOption(k){
+  if(S.edit)return;
+  push();park();
+  const used=S.opts.map(o=>o.label);let L='B';for(let c=66;c<91;c++){L=String.fromCharCode(c);if(!used.includes(L))break;}
+  const base=S.phases[k-1],end=endOf(base),from=S.oi;
+  S.opts.push({label:L,from,at:k,own:[],sig:JSON.stringify(end),cur:{players:clone(end.players),ballAtStart:end.ball,lines:[],showDef:!!base.showDef,defStale:!base.showDef,extra:[],note:''}});
+  loadOpt(S.opts.length-1);render();
+  hint(`Option ${L}: same as Option ${S.opts[from].label} up to phase ${k}. Now draw phase ${k+1} of Option ${L}.`);
+}
+function deleteOption(){
+  const o=AO(),kid=S.opts.find(c=>c.from===S.oi);
+  if(kid){delArmed=false;render();hint(`Option ${kid.label} branches from Option ${o.label}. Delete Option ${kid.label} first.`);return;}
+  if(o.from==null||S.edit)return;
+  if(!delArmed){delArmed=true;render();return;}
+  delArmed=false;push();const r=S.oi,par=o.from;S.opts.splice(r,1);S.opts.forEach(c=>{if(c.from!=null&&c.from>r)c.from--;});
+  loadOpt(par);render();hint(`Option ${o.label} deleted.`);
+}
+function everyPhase(){let a=allPhases().concat([curPhase()]);S.opts.forEach((o,i)=>{if(i!==S.oi&&o.cur)a=a.concat(o.own,[o.cur]);});return a;}
+function startEdit(i){
+  if(S.edit)return;
+  if(i<AO().at){let o=AO();while(o.from!=null&&i<o.at)o=S.opts[o.from];hint(`Phase ${i+1} is shared. Switch to Option ${o.label} to edit it.`);return;}
+  choosing=false;
+  push();const snap=JSON.stringify(S);
+  const ph=S.phases[i];
+  S.edit={i,snap,oldEnd:JSON.stringify(endOf(ph)),later:S.phases.slice(i+1),cur:{players:S.players,ballAtStart:S.ballAtStart,lines:S.lines,showDef:S.showDef,defStale:S.defStale,extra:S.extra||[],note:S.note||''}};
+  S.phases=S.phases.slice(0,i);S.edit.mark=hist.length;
+  S.players=ph.players;S.ballAtStart=ph.ballAtStart;S.lines=ph.lines;S.showDef=ph.showDef;S.extra=ph.extra||[];S.note=ph.note||'';
+  render();hint(`Editing phase ${i+1}: add, undo or clear actions, or use Set start. Then Save.`);
+}
+function saveEdit(){
+  if(!S.lines.length){hint('This phase has no actions. Draw something or tap Delete.');return false;}
+  push();const n=S.edit.i+1;const ph=JSON.parse(JSON.stringify(curPhase())),end=endOf(ph),same=JSON.stringify(end)===S.edit.oldEnd;S.phases.push(ph);relink(end,same,JSON.parse(S.edit.oldEnd));
+  render();hint(same?`Phase ${n} saved.`:`Phase ${n} saved. Later phases now start from its new end positions.`);return true;
+}
+function navEdit(d){
+  if(!S.edit)return;const i=S.edit.i,tot=i+1+S.edit.later.length,j=i+d;
+  if(j<0){hint('This is the first phase.');return;}
+  if(j<AO().at){let o=AO();while(o.from!=null&&j<o.at)o=S.opts[o.from];hint(`Phase ${j+1} is shared. Switch to Option ${o.label} to edit it.`);return;}
+  if(!saveEdit())return;
+  if(j<tot){startEdit(j);hint(`Phase ${i+1} saved. Now editing phase ${j+1}.`);}
+  else hint(`Phase ${i+1} saved. You are back on phase ${tot+1}, the one you are drawing.`);
+}
+function deleteEdit(){
+  const dep=S.opts.find(c=>c.from===S.oi&&c.at>S.edit.i);
+  if(dep){hint(`Phase ${S.edit.i+1} is shared with Option ${dep.label}. Delete Option ${dep.label} first, or Cancel.`);return;}
+  push();const n=S.edit.i+1;const pl=JSON.parse(JSON.stringify(S.players));for(const id of S.extra||[])delete pl[id];relink({players:pl,ball:S.ballAtStart},false,JSON.parse(S.edit.oldEnd));
+  render();hint(`Phase ${n} deleted.`);
+}
+function cancelEdit(){const n=S.name;S=JSON.parse(S.edit.snap);S.name=n;render();hint('Edit cancelled.');}
+function nextPhase(){
+  if(S.edit){saveEdit();return;}
+  if(!S.lines.length){hint('Draw at least one action before saving the phase.');return;}
+  choosing=false;push();
+  S.phases.push({players:JSON.parse(JSON.stringify(S.players)),ballAtStart:S.ballAtStart,lines:JSON.parse(JSON.stringify(S.lines)),showDef:S.showDef,extra:(S.extra||[]).slice(),note:S.note||''});
+  const np={};for(const id in S.players){if(isExtra(id))continue;const q=projOf(S,id);np[id]={x:q.x,y:q.y};}
+  S.ballAtStart=holderOf(S);S.players=np;S.lines=[];S.extra=[];S.note='';
+  if(!S.showDef)S.defStale=true;
+  render();hint(`Phase ${S.phases.length} saved. Now drawing phase ${S.phases.length+1}.`);
+}
+
+document.querySelectorAll('[data-tool]').forEach(b=>b.onclick=()=>{tool=b.dataset.tool;hint(HINTS[tool]);render();});
+$('#undo').onclick=()=>{
+  if(S.edit&&hist.length<=S.edit.mark){if(S.lines.length){S.lines.pop();render();hint('Last action removed.');}else hint('No actions left. Use Cancel to leave editing.');return;}
+  if(!hist.length){hint('Nothing to undo.');return;}const n=S.name,mark=loadMarks.delete(hist.length);S=JSON.parse(hist.pop());if(mark)$('#name').value=S.name||'';else S.name=n;render();hint(mark?'Back to the play that was on the board before.':'Undone.');};
+$('#def').onclick=()=>{push();S.showDef=!S.showDef;if(S.showDef&&S.defStale){for(const k of ATT)S.players['X'+k]=defFor(S.players[k]);S.defStale=false;}render();};
+$('#shot').onclick=()=>{
+  if(S.lines.some(l=>l.type==='shot')){hint('This phase already has a shot. Use Undo to remove it.');return;}
+  const h=holderOf(S),q=projOf(S,h);
+  push();S.lines.push({type:'shot',who:h,stay:true,pts:[{x:q.x,y:q.y},{x:BX,y:BY}]});render();hint(describe(curPhase()).acts.slice(-1)[0]+'. The shot always comes from the player with the ball.');};
+$('#clear').onclick=()=>{if(!S.lines.length)return;push();S.lines=[];render();hint('Lines of this phase cleared.');};
+$('#courtBtn').onclick=()=>{
+  if(S.full){const bad=everyPhase().some(ph=>vis(ph).some(id=>ph.players[id].y>H+8)||ph.lines.some(l=>l.pts.some(q=>q.y>H+8)));
+    if(bad){hint('Some players or lines are in the backcourt. Move them to the front court before going back to half court.');return;}}
+  push();S.full=!S.full;if(!S.showDef)S.defStale=true;render();hint(S.full?'Full court. We attack the top basket. Use Set start to drag players into the backcourt.':'Half court.');};
+$('#next').onclick=nextPhase;
+$('#editPrev').onclick=()=>navEdit(-1);$('#editNext').onclick=()=>navEdit(1);$('#editSave').onclick=saveEdit;$('#editDel').onclick=deleteEdit;$('#editCancel').onclick=cancelEdit;
+$('#name').value=S.name||'';
+$('#name').addEventListener('input',e=>{S.name=e.target.value;save();});
+$('#note').addEventListener('input',e=>{S.note=e.target.value;save();});
+document.addEventListener('keydown',e=>{
+  const typing=e.target.tagName==='TEXTAREA'||(e.target.tagName==='INPUT'&&e.target.type!=='file');
+  if(e.target.tagName==='TEXTAREA')return;
+  if(e.key==='Enter'){if(e.target.tagName==='INPUT'){e.target.blur();e.preventDefault();return;}if($('#review').style.display!=='block'&&$('#lib').style.display!=='block'){e.preventDefault();nextPhase();}}
+  if(!typing&&(e.ctrlKey||e.metaKey)&&e.key==='z'){e.preventDefault();$('#undo').click();}
+  if(S.edit&&e.target.tagName!=='INPUT'&&(e.key==='ArrowLeft'||e.key==='ArrowRight')){e.preventDefault();navEdit(e.key==='ArrowLeft'?-1:1);}
+});
+
+/* ---------- review ---------- */
+function openReview(){
+  const multi=S.opts.length>1&&!S.edit;if(multi)park();
+  const groups=multi?S.opts.map((o,i)=>({o,i,phs:fullPath(i),saved:i===S.oi?S.phases.length:pathOf(i).length})):[{o:AO(),i:S.oi,phs:allPhases(),saved:S.phases.length}];
+  const n=groups[0].phs.length;
+  $('#rvTitle').textContent=(S.name||'Untitled play')+' · '+(multi?S.opts.length+' options':n+' phase'+(n===1?'':'s'));
+  const box=$('#rvPhases');box.innerHTML='';
+  if(!groups.some(g=>g.phs.length))box.innerHTML='<p class="hint">No phases yet — draw on the board first.</p>';
+  groups.forEach(g=>{
+    if(multi){const h=document.createElement('h2');h.style.marginTop='18px';h.textContent='Option '+g.o.label+(g.o.from!=null?' · same as Option '+S.opts[g.o.from].label+' up to phase '+g.o.at:'');box.appendChild(h);}
+    g.phs.forEach((ph,i)=>{
+      if(multi&&i<g.o.at)return;
+      const d=describe(ph);const div=document.createElement('div');div.className='ph';
+      const unsaved=!S.edit&&i>=g.saved;
+      div.innerHTML=`<h3>Phase ${i+1}${unsaved?' (not saved yet)':''}${S.edit&&i===S.edit.i?' (editing)':''}</h3>`;
+      const s=document.createElementNS('http://www.w3.org/2000/svg','svg');s.setAttribute('viewBox',vb());if(S.full)s.setAttribute('class','full');draw(s,ph,{ballAt:'start'});div.appendChild(s);
+      if(ph.note){const np=document.createElement('div');np.className='note';np.textContent=ph.note;div.appendChild(np);}
+      const ol=document.createElement('ol');d.acts.forEach(a=>{const li=document.createElement('li');li.textContent=a;ol.appendChild(li);});div.appendChild(ol);
+      const st=document.createElement('div');st.className='start';st.textContent='Start: '+d.start.join(' · ');div.appendChild(st);
+      if(!S.edit&&!unsaved&&g.i===S.oi&&i>=g.o.at){const eb=document.createElement('button');eb.className='edit';eb.textContent='✎ Edit phase '+(i+1);eb.onclick=()=>{$('#back').click();startEdit(i);};div.appendChild(eb);}
+      box.appendChild(div);
+    });
+  });
+  $('#review').style.display='block';$('#review').scrollTop=0;
+}
+$('#openReview').onclick=openReview;
+$('#chips').addEventListener('click',e=>{const d=e.target.dataset;
+  if(d.ph!=null)startEdit(+d.ph);
+  else if(d.add){
+    if(!S.phases.length){hint('Save at least one phase first (Next phase). A new option branches after a saved phase.');return;}
+    if(S.phases.length===1)addOption(1);else{choosing=true;render();hint('Tap the last phase that the new option shares with this one.');}}
+  else if(d.after){choosing=false;addOption(+d.after);}
+  else if(d.cancel){choosing=false;render();}
+});
+$('#optTabs').addEventListener('click',e=>{const d=e.target.dataset;
+  if(d.opt!=null){delArmed=false;choosing=false;switchOpt(+d.opt);}
+  else if(d.delopt)deleteOption();
+});
+$('#back').onclick=()=>{$('#review').style.display='none';};
+$('#rvPdf').onclick=()=>{if(S.edit)return hint('Finish editing the phase first.');const ex=exportParts();if(!ex.data.ph.length)return hint('Nothing to print yet.');printPlays([{name:S.name||'Untitled play',data:ex.data}],false);};
+
+/* ---------- my plays: saved in this browser (localStorage). Export / Import move them between devices. ---------- */
+const PKEY='tpb-plays',TKEY='tpb-team',BKEY='tpb-backup';
+let PLAYS=[],dbState='ready',delId=null;const loadMarks=new Set();
+const lsGet=k=>{try{return localStorage.getItem(k);}catch(e){return null;}};
+const lsSet=(k,v)=>{try{localStorage.setItem(k,v);return true;}catch(e){return false;}};
+const TEAM=()=>(lsGet(TKEY)||'').trim();
+const slug=n=>(n||'').normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'').slice(0,60);
+const when=ms=>{try{return new Date(ms).toLocaleString([],{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'});}catch(e){return '';}};
+const esc=t=>String(t==null?'':t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function say(m){hint(m);$('#libMsg').textContent=m;}
+function loadPlays(){
+  const raw=lsGet(PKEY);if(raw===null&&!lsSet('tpb-test','1')){dbState='off';return;}
+  try{const o=JSON.parse(raw||'{}');PLAYS=Object.keys(o).map(id=>Object.assign({id},o[id]));}catch(e){PLAYS=[];}
+  PLAYS.sort((a,b)=>(b.updatedAt||0)-(a.updatedAt||0));
+}
+function storePlays(){const o={};PLAYS.forEach(p=>{const {id,...rest}=p;o[id]=rest;});return lsSet(PKEY,JSON.stringify(o));}
+function fromData(d,name){
+  const st=freshState();st.name=name||d.n||'';st.full=!!d.fc;
+  const conv=ph=>{const players={};for(const id in ph.p)players[id]={x:ph.p[id][0],y:ph.p[id][1]};
+    for(const k of ATT){if(!players[k])players[k]={...INIT[k]};if(!players['X'+k])players['X'+k]=defFor(players[k]);}
+    const extra=Object.keys(ph.p).filter(isExtra);extra.forEach(id=>{st.face[id]=(ph.fa||{})[id]||0;st.dn=Math.max(st.dn,+id.slice(1)||0);});
+    return {players,ballAtStart:ph.b,showDef:!!ph.d,extra,note:ph.x||'',lines:(ph.l||[]).map(o=>{const l={type:o.t,who:o.w,pts:o.pts.map(q=>({x:q[0],y:q[1]}))};if(o.to)l.to=o.to;if(o.f)l.for=o.f;if(o.s){l.stay=true;if(o.t==='screen')l.noTrim=true;}return l;})};};
+  const curOf=(e,sd)=>({players:clone(e.players),ballAtStart:e.ball,lines:[],showDef:!!sd,defStale:!sd,extra:[],note:''});
+  const A=(d.ph||[]).map(conv),la=A[A.length-1];
+  st.opts=[{label:'A',from:null,at:0,own:A,sig:null,cur:la?curOf(endOf(la),la.showDef):{players:st.players,ballAtStart:'1',lines:[],showDef:false,defStale:false,extra:[],note:''}}];
+  S=st;
+  (d.opt||[]).forEach(o=>{const from=st.opts.findIndex(x=>x.label===o.from);if(from<0)return;
+    const base=pathOf(from);if(!base.length)return;const at=Math.max(1,Math.min(o.at,base.length));
+    const b=base[at-1],end=endOf(b),own=(o.ph||[]).map(conv),lo=own[own.length-1];
+    st.opts.push({label:o.k,from,at,own,sig:JSON.stringify(end),cur:lo?curOf(endOf(lo),lo.showDef):curOf(end,b.showDef)});});
+  loadOpt(0);
+}
+function libRender(){
+  if(document.activeElement!==$('#team'))$('#team').value=TEAM();
+  const box=$('#libList');box.innerHTML='';
+  const bk=+lsGet(BKEY)||0,changed=PLAYS.some(p=>(p.updatedAt||0)>bk);
+  $('#backup').textContent=!PLAYS.length?'':!bk?'Plays are saved only in this browser. Tap Export now and then to keep a backup file.':changed?'Changed since your last export ('+when(bk)+'). Tap Export to update your backup.':'Backup up to date (exported '+when(bk)+').';
+  $('#libStatus').textContent=dbState==='off'?'This browser does not allow saving (private mode?). Plays will be lost when you close it. Use Export to keep them.':PLAYS.length?'':'No saved plays yet. Draw one and tap Save current.';
+  PLAYS.forEach(p=>{const div=document.createElement('div');div.className='ph';
+    const h=document.createElement('h3');h.textContent=p.name||p.id;div.appendChild(h);
+    const m=document.createElement('div');m.className='meta';const bits=[];
+    if(p.phases)bits.push(p.phases+' phase'+(p.phases===1?'':'s'));if(p.options>1)bits.push(p.options+' options');if(p.updatedAt)bits.push('saved '+when(p.updatedAt));
+    m.textContent=bits.join(' · ');div.appendChild(m);
+    const row=document.createElement('div');row.className='row three';
+    const o=document.createElement('button');o.className='primary';o.textContent='Open';o.onclick=()=>openPlay(p.id);
+    const pd=document.createElement('button');pd.textContent='PDF';pd.onclick=()=>printPlays([p],false);
+    const x=document.createElement('button');x.className='danger';x.textContent=delId===p.id?'Tap again':'Delete';x.onclick=()=>deletePlay(p.id);
+    row.appendChild(o);row.appendChild(pd);row.appendChild(x);div.appendChild(row);box.appendChild(div);});
+}
+function savePlay(){
+  const name=(S.name||'').trim(),id=slug(name);
+  if(S.edit)return say('Finish editing the phase first.');
+  if(!id)return say('Give the play a name first (top left of the board).');
+  const ex=exportParts();
+  if(!ex.data.ph.length)return say('Nothing to save yet. Draw at least one action.');
+  const prev=PLAYS.findIndex(p=>p.id===id),rec={id,name,data:ex.data,phases:ex.data.ph.length,options:1+(ex.data.opt||[]).length,updatedAt:Date.now()};
+  if(prev>=0)PLAYS.splice(prev,1);PLAYS.unshift(rec);
+  if(!storePlays())return say('Could not save in this browser (storage full or private mode). Use Export.');
+  say(prev>=0?`Updated "${name}" in My plays.`:`Saved "${name}" to My plays.`);libRender();
+}
+function openPlay(id){
+  const p=PLAYS.find(q=>q.id===id);if(!p||!p.data||!p.data.ph)return say('This play has no drawing data.');
+  if(S.edit)return say('Finish editing the phase first.');
+  const old=S;push();loadMarks.add(hist.length);
+  try{fromData(clone(p.data),p.name);}catch(e){S=old;loadMarks.delete(hist.length);hist.pop();return say('This play could not be opened.');}
+  $('#name').value=S.name||'';tool='move';choosing=false;delArmed=false;$('#lib').style.display='none';render();
+  hint(`Opened "${S.name}". Undo brings back the play that was on the board.`);
+}
+function deletePlay(id){
+  if(delId!==id){delId=id;libRender();return;}
+  delId=null;PLAYS=PLAYS.filter(p=>p.id!==id);storePlays();say('Play deleted.');libRender();
+}
+/* ---------- export / import ---------- */
+function exportAll(){
+  if(!PLAYS.length)return say('Nothing to export yet.');
+  const d=new Date(),stamp=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+  const json=JSON.stringify({app:'tantalus-playbook',version:1,team:TEAM(),exportedAt:Date.now(),plays:PLAYS.map(p=>({name:p.name,data:p.data,updatedAt:p.updatedAt}))});
+  const name='playbook-'+(slug(TEAM())||'plays')+'-'+stamp+'.json';
+  try{const url=URL.createObjectURL(new Blob([json],{type:'application/json'}));const a=document.createElement('a');a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),4000);}
+  catch(e){return say('Export failed in this browser.');}
+  lsSet(BKEY,String(Date.now()));say(`Exported ${PLAYS.length} play${PLAYS.length===1?'':'s'} to ${name}. Keep that file somewhere safe.`);libRender();
+}
+function importFile(f){
+  const r=new FileReader();
+  r.onload=()=>{let o;try{o=JSON.parse(r.result);}catch(e){return say('That file is not a playbook export.');}
+    const list=Array.isArray(o&&o.plays)?o.plays:null;if(!list)return say('That file is not a playbook export.');
+    let added=0,updated=0,bad=0;
+    list.forEach(p=>{const name=(p&&(p.name||(p.data&&p.data.n))||'').trim(),id=slug(name);
+      if(!id||!p.data||!Array.isArray(p.data.ph)||!p.data.ph.length){bad++;return;}
+      try{const keep=S;fromData(clone(p.data),name);S=keep;}catch(e){S=S||freshState();bad++;return;}
+      const rec={id,name,data:p.data,phases:p.data.ph.length,options:1+(p.data.opt||[]).length,updatedAt:p.updatedAt||Date.now()};
+      const i=PLAYS.findIndex(q=>q.id===id);if(i>=0){PLAYS[i]=rec;updated++;}else{PLAYS.push(rec);added++;}});
+    PLAYS.sort((a,b)=>(b.updatedAt||0)-(a.updatedAt||0));
+    if(!TEAM()&&o.team)lsSet(TKEY,String(o.team));
+    if(!storePlays())return say('Could not save the imported plays in this browser.');
+    render();libRender();say(`Imported: ${added} new, ${updated} replaced (same name)`+(bad?`, ${bad} skipped (damaged)`:'')+'.');};
+  r.onerror=()=>say('Could not read that file.');
+  r.readAsText(f);
+}
+/* ---------- playbook PDF (browser print → Save as PDF) ---------- */
+const LEGEND='Dashed arrow = pass · Solid arrow = cut · Zigzag = dribble · Line ending in T = screen · Line ending in ‖ = hand-off · Double-line arrow = shot · Dashed circle = where the player ends · Orange dot = ball · Light green border = out of bounds · Plain red circle = added defender';
+let PUID=0;
+function playHtml(p){
+  const keep=S;let out='';
+  try{
+    fromData(clone(p.data),p.name);
+    const multi=S.opts.length>1,full=!!S.full,box=vb(),cards=[];
+    S.opts.forEach((o,i)=>{loadOpt(i);
+      S.phases.forEach((ph,k)=>{if(k<o.at)return;
+        const g={innerHTML:''};S.face=S.face||{};draw(g,ph,{ballAt:'start'});
+        const first=k===o.at,band=multi?`<div class="band b${o.label}"><b>Option ${o.label}</b> · Phase ${k+1}${first&&o.from!=null?`<small>continues after phase ${o.at} of Option ${S.opts[o.from].label}</small>`:''}</div>`:`<h3>Phase ${k+1}</h3>`;
+        const body=ph.note?`<p>${esc(ph.note)}</p>`:'<ol>'+describe(ph).acts.map(a=>`<li>${esc(a)}</li>`).join('')+'</ol>';
+        const u='p'+(++PUID),inner=g.innerHTML.replace(/id="(wood|cch|ccf)"/g,(m,x)=>`id="${x}${u}"`).replace(/url\(#(wood|cch|ccf)\)/g,(m,x)=>`url(#${x}${u})`);
+        cards.push(`<div class="card">${band}<svg${full?' class="full"':''} viewBox="${box}" xmlns="http://www.w3.org/2000/svg">${inner}</svg>${body}</div>`);});});
+    let rows='';for(let i=0;i<cards.length;i+=2)rows+=`<div class="prow">${cards.slice(i,i+2).join('')}</div>`;
+    out=`<section><div class="head"><h2>${esc(p.name)}</h2><div>${esc(TEAM())}${multi?` · ${S.opts.length} options`:''}</div></div>${rows}</section>`;
+  }finally{S=keep;}
+  return out;
+}
+function printPlays(list,cover){
+  if(!list.length)return say('No plays to print. Save a play first.');
+  let h='';
+  if(cover){const toc=list.map((p,i)=>`<li><span>${i+1}</span>${esc(p.name)}${(p.options||1)>1?`<em>${p.options} options</em>`:''}</li>`).join('');
+    h+=`<div class="cover"><svg viewBox="0 0 106 116"><use href="#tlogo"/></svg><h1>Playbook</h1><div class="sub">${esc(TEAM()||'Tantalus')}</div><ol>${toc}</ol><div class="leg">${esc(LEGEND)}</div><div class="date">${esc(new Date().toLocaleDateString([],{day:'numeric',month:'long',year:'numeric'}))}</div></div>`;}
+  let bad=0;list.forEach(p=>{try{h+=playHtml(p);}catch(e){bad++;}});
+  if(!cover)h+=`<div style="font-size:7.5pt;color:#124020;margin-top:4mm">${esc(LEGEND)}</div>`;
+  $('#print').innerHTML=h;
+  const t=document.title;document.title=cover?'Playbook '+(TEAM()||''):(list[0].name||'Play');
+  const done=()=>{document.title=t;};window.addEventListener('afterprint',done,{once:true});
+  if(bad)say(bad+' play(s) could not be drawn and were left out.');
+  try{window.print();}catch(e){done();say('Printing is not available here. Open the board in Safari or Chrome.');}
+}
+$('#openLib').onclick=()=>{delId=null;$('#libMsg').textContent='';libRender();$('#lib').style.display='block';$('#lib').scrollTop=0;};
+$('#libBack').onclick=()=>{$('#lib').style.display='none';};
+$('#libNew').onclick=()=>{
+  push();loadMarks.add(hist.length);const fc=!!S.full;S=freshState();S.full=fc;$('#name').value='';
+  tool='move';choosing=false;delArmed=false;$('#lib').style.display='none';render();
+  hint('New play. Give it a name and set the start. Undo brings back the play that was on the board.');};
+$('#libSave').onclick=savePlay;$('#saveBtn').onclick=savePlay;
+$('#team').addEventListener('input',e=>{lsSet(TKEY,e.target.value);});
+$('#pdfAll').onclick=()=>printPlays(PLAYS,true);
+$('#expBtn').onclick=exportAll;
+$('#impBtn').onclick=()=>{$('#impFile').value='';$('#impFile').click();};
+$('#impFile').addEventListener('change',e=>{const f=e.target.files&&e.target.files[0];if(f)importFile(f);});
+loadPlays();
+
+hint(HINTS.move);render();
+</script>
+</body>
+</html>
