@@ -27,6 +27,13 @@ To update the board later, replace `index.html` in the repository. Coaches keep 
 - The browser's print window opens. Choose **Save as PDF** (on iPhone: Share → Print, then Share again → Save to Files).
 - Each phase shows the explanation typed under the court. If a phase has none, the PDF lists the actions instead (for example "2 passes to 5").
 
+## Phone and computer
+
+The board picks its layout from the screen width; plays are the same in both.
+
+- **Phone:** the drawing tools, Undo, Clear, Next phase and **More** stay at the bottom of the screen. More has Show defense, Rotate defender, Full court, Review phases, Save play and PDF. ☰ opens My plays.
+- **Computer (1000 px wide or more):** My plays on the left, the court in the middle with phase thumbnails underneath (click one to edit that phase), tools and the phase explanation on the right. Keys: Enter next phase, Ctrl+Z undo, ← → previous / next phase while editing, 1–8 tools.
+
 ## How to draw
 
 - **Set start**: drag players and the ball to their starting spots. The light green border is out of bounds, for sideline and baseline plays.

@@ -9,13 +9,10 @@
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;background:var(--bg);color:var(--txt);font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
 .wrap{max-width:560px;margin:0 auto;padding:10px 10px 28px}
-header{display:flex;gap:8px;align-items:center;margin-bottom:8px}
-header input{flex:1;min-width:0;background:var(--panel);border:1px solid var(--bd);color:var(--txt);border-radius:10px;padding:10px 12px;font-size:16px;font-weight:600}
 .tag{background:#124020;color:#82c498;border-radius:999px;padding:8px 12px;font-size:14px;font-weight:600;white-space:nowrap}
 #court.full,.ph svg.full{width:auto;max-width:100%;max-height:76vh;margin:0 auto;display:block}
 #court{width:100%;height:auto;display:block;touch-action:none;border-radius:12px;background:#82c498;user-select:none;-webkit-user-select:none}
 .hint{color:var(--muted);font-size:13px;min-height:18px;margin:7px 2px}
-.tools{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
 button{font:inherit;font-size:14px;border:1px solid var(--bd);background:var(--panel);color:var(--txt);border-radius:10px;padding:11px 4px;cursor:pointer}
 button.on{background:var(--main);border-color:var(--light)}
 button.primary{background:var(--light);border-color:var(--light);color:#000000;font-weight:600}
@@ -56,6 +53,93 @@ textarea{width:100%;min-height:170px;background:var(--panel);color:var(--txt);bo
 .field input{flex:1;min-width:0;background:var(--panel);border:1px solid var(--bd);color:var(--txt);border-radius:10px;padding:9px 12px;font-size:16px}
 .ph .row.three{grid-template-columns:1fr 1fr 1fr}
 #print{display:none}
+/* ---------- layout: phone first ---------- */
+#app{max-width:560px;margin:0 auto;padding:10px 10px 0;min-height:100vh;min-height:100dvh;display:flex;flex-direction:column}
+#hdr{display:flex;gap:8px;align-items:center;margin-bottom:8px}
+#hdr input{flex:1;min-width:0;background:var(--panel);border:1px solid var(--bd);color:var(--txt);border-radius:10px;padding:10px 12px;font-size:16px;font-weight:700}
+#openLib{width:44px;flex:none;padding:9px 0;font-size:19px}
+.brand,#hdrBtns,.lbl,#rd,.kbd,#thumbs,#stage .legend{display:none}
+#stage{display:flex;flex-direction:column}
+#panel{flex:1;display:flex;flex-direction:column}
+#bar{margin:auto -10px 0;position:sticky;bottom:0;z-index:5;background:#06150b;border-top:1px solid var(--bd);padding:8px 8px calc(10px + env(safe-area-inset-bottom));display:grid;grid-template-columns:1fr 1fr 2.2fr 1fr;gap:6px}
+#chips{margin:2px 0 10px}
+#toolRow{grid-column:1/-1;display:grid;grid-template-columns:repeat(8,1fr);gap:4px}
+.ic{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-size:10.5px;line-height:1.1;padding:6px 0 5px;min-width:0}
+.ic svg{width:22px;height:22px;flex:none}
+#bar>button{padding:11px 4px}
+#lib{position:fixed;inset:0;z-index:10;background:var(--bg);overflow:auto;padding:10px;display:none}
+body.show-lib #lib{display:block}
+#lib>*{max-width:560px;margin-left:auto;margin-right:auto}
+.libtop{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:4px}
+.libio{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:12px}
+.libh{margin:14px 2px 6px}
+.pl{display:flex;align-items:center;gap:6px;padding:7px 7px 7px 12px;border-radius:10px;background:var(--panel);margin:6px 0;border:1px solid transparent}
+.pl.on{border-color:var(--light)}
+.pl .pt{flex:1;min-width:0;cursor:pointer;padding:3px 0}
+.pl .pt b{display:block;font-weight:600;font-size:15px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pl .pt small{color:var(--muted);font-size:12px}
+.pl button{padding:8px 10px;font-size:12.5px;flex:none}
+#sheet{display:none;position:fixed;inset:0;z-index:20;background:rgba(0,0,0,.55)}
+body.show-sheet #sheet{display:block}
+#sheet .in{position:absolute;left:0;right:0;bottom:0;max-width:560px;margin:0 auto;background:#06150b;border-top:1px solid var(--bd);border-radius:16px 16px 0 0;padding:14px 12px calc(18px + env(safe-area-inset-bottom));display:grid;grid-template-columns:1fr 1fr;gap:8px}
+#sheet .sh{grid-column:1/-1;font-weight:700;color:var(--light);padding:0 4px 2px}
+#sheet .legend{margin-top:6px}
+.lbl{margin:0;color:var(--light);font-size:12px;letter-spacing:.08em;text-transform:uppercase}
+.kbd{font-size:11.5px;color:var(--light);line-height:1.7}
+.kbd b{color:#fff;background:var(--panel);border-radius:4px;padding:0 5px;font-weight:600}
+.th{flex:none;border-radius:9px;padding:5px;background:var(--panel);font-size:11.5px;color:var(--light);text-align:center;border:1px solid transparent;cursor:pointer;user-select:none}
+.th.on{border-color:var(--light);color:#fff}
+.th.lock{opacity:.55}
+.th.pick{border:1px dashed var(--light);color:#fff}
+.th svg{height:84px;width:auto;display:block;border-radius:5px;margin:0 auto 3px}
+.th.add{display:flex;align-items:center;justify-content:center;min-width:96px;border:1px dashed var(--light);background:transparent;font-size:13px}
+
+/* ---------- layout: computer ---------- */
+@media (min-width:1000px){
+  #app{max-width:none;margin:0;padding:0;height:100vh;min-height:0;display:grid;grid-template-columns:260px minmax(0,1fr) 330px;grid-template-rows:58px minmax(0,1fr);grid-template-areas:"hdr hdr hdr" "side stage panel"}
+  #hdr{grid-area:hdr;margin:0;padding:0 16px;gap:12px;border-bottom:1px solid var(--bd);background:#06150b}
+  #hdr input{flex:0 1 320px;padding:7px 12px;font-size:17px}
+  #openLib{display:none}
+  .brand{display:flex;align-items:center;gap:8px;font-weight:800;color:var(--light);font-size:18px;margin-right:6px}
+  .brand svg{width:34px;height:38px}
+  #hdrBtns{display:flex;gap:8px;margin-left:auto}
+  #hdrBtns button{padding:8px 14px}
+  #lib{grid-area:side;position:static;z-index:auto;display:flex!important;flex-direction:column;overflow:auto;padding:12px;border-right:1px solid var(--bd);background:#06150b}
+  #lib>*{max-width:none;margin-left:0;margin-right:0}
+  #libBack,#libSave,#pdfAll{display:none}
+  .libtop{order:5;grid-template-columns:1fr;margin-top:10px}
+  .libio{order:6;grid-template-columns:1fr 1fr;margin-top:6px}
+  #backup{order:7}
+  .libh{margin:2px 4px 8px;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--light)}
+  .pl{background:transparent;padding:6px 6px 6px 10px;margin:2px 0}
+  .pl:hover{background:var(--panel)}
+  .pl.on{background:var(--panel)}
+  .pl button{padding:6px 8px;font-size:12px;opacity:.85}
+  #stage{grid-area:stage;align-items:center;min-height:0;padding:12px 18px 10px;gap:10px}
+  #optTabs{margin:0;justify-content:center;min-height:36px;flex:none}
+  #court{flex:1;min-height:0;width:100%;height:100%;background:transparent;border-radius:0}
+  #court.full{max-height:none;max-width:none;width:100%}
+  #thumbs{display:flex;gap:8px;justify-content:safe center;overflow-x:auto;max-width:100%;flex:none;padding-bottom:2px}
+  #stage .legend{display:block;margin:0;text-align:center;font-size:11.5px;max-width:900px;flex:none}
+  #panel{grid-area:panel;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:repeat(10,auto) minmax(0,1fr) auto auto;grid-template-areas:"dl dl" "tools tools" "rd rd" "undo clear" "edit edit" "nl nl" "note note" "hint hint" "chips chips" "x x" "sp sp" "next next" "kbd kbd";gap:8px 6px;padding:14px;border-left:1px solid var(--bd);background:#06150b;overflow:auto}
+  #bar{display:contents}
+  #drawLbl{grid-area:dl;display:block}
+  #toolRow{grid-area:tools;grid-template-columns:repeat(4,1fr);gap:6px}
+  .ic{font-size:11.5px;padding:8px 0 7px}
+  #rd{grid-area:rd;display:grid;grid-template-columns:1fr 1fr;gap:6px}
+  #undo{grid-area:undo}#clear{grid-area:clear}
+  #editBar{grid-area:edit;margin:0}
+  #noteLbl{grid-area:nl;display:block;margin-top:6px}
+  #note{grid-area:note;height:110px;resize:none;margin:0}
+  #hint{grid-area:hint;margin:0}
+  #chips,#moreBtn{display:none}
+  #next{grid-area:next;padding:14px;font-size:16px}
+  .kbd{grid-area:kbd;display:block}
+  #bar>button{padding:10px 4px}
+  #review .wrap{max-width:1100px}
+  #rvPhases{display:grid;grid-template-columns:1fr 1fr;gap:0 14px}
+}
+
 @media print{
   @page{size:A4;margin:12mm 12mm 14mm}
   html,body{background:#ffffff!important;color:#000000}
@@ -91,58 +175,67 @@ h2{font-size:18px;margin:6px 2px}
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><image id="tlogo" width="106" height="116" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAARIAAAEsCAMAAAA4mczMAAAAIGNIUk0AAHomAACAhAAA+gAAAIDoAAB1MAAA6mAAADqYAAAXcJy6UTwAAABUUExURQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABE8HQAAAAAAAAAAAAAAAAAAACR/PiR/PgAAACR/PiR/PiR/PiV/PiR/PiR/PiR/PiSAPv///wUEu0kAAAAadFJOUwARUI/R/hMksAovbxgOFgGSzyH2gbDeb39PvADfHAAAAAFiS0dEGwJg1KQAAAAHdElNRQfqCxATKBVyIqOiAAAgT0lEQVR42u1d6YKiuhLWIhKSQAOy2Nf3f9BbWQkQXBP1TJs/Z6bPtJKi1q+23e79Zw8ZIYfDgWSQ775nt6d7mh3sKYD9dYIwKAgyBxSOKNkfZxTLHxkXxDFKXlZ/lyLc0YEAd4yC9Cm/FFGEcBpFZMX+SxEpME54CiDZn9SyeXGYHyKAWDY5iL9IEnFYHSs8BRwI/+dZgv5cFhsrPIpRCP7PrL76Ef/hU0LTtou3XmeH0CGCSk+FCrKSHN62Dfwbpugo2vO5W96QkkP4FIJyvqtLoCtJ687n9h+wz0wS5Nz1LKhJiD4LTiEZ3xcHsrw86/GTzu1/3eU/NvIa52GlBgTJBMjD5QGBvohHmUxSDFYKaZCf1TXH/7Tr0XbqzdK1Ky9pYE9RSPpIyhi6ZNJAr+0wbRWB2/+eNarAPDMYipi/ssmIsIB2JZIwmizKacs8mWGWxJomhoE4VP8RggyjpgGM6gKjvADjom+a3gIifEu7KroIKrmkMHTIQf6m4Gzxkfgp4/Bf0Cy86c4NW1BEkkkxTDdoGYLDhUOynCOrGP1Kh05/ziB5YkYT1qBm4R+Pf0iLCwsm50ov6jMoPuGHiwcgQ4WrqPcz/a66Pvj6BKRdhvqjKXKSb1QxyXGwj87EOFHE0GvTLTEkKaQnW9tbuzMKZkk9lJpN8BNPH6xR8l4+v9Ik2ok4D7SWkjQRZPwtr5OEwKRey35G0IaiJKk/KleHj8rryT+bImfhXi5egM9uNFrJ32+rVzxCqZpCCwTSdPYRPVBFZM1uovtkmjBNEaUscuWzNv3QDn2vVWvXtT239oEVYb0K6LShz85nRpjxvjVaVX5aO5yUxm3zyX3rP1J2avXCtNiYlze2vxyftaIgTuhy+C5sFqIHx+yFpEVdZQtX7Yfrj6gkgU6GQGJnRQf1ySfqWK0HdXxn3Mxz2wjObkJLiDD00PgasgmhYV7kwgqSdor1m+jgk+SF+Y6lVnqDL/vHqygjKYALL2+RHUD4zqvHikdfNw2eIjcuMvsc771qnGk8ntpWNN6Dh2jiKROpQTIytzcFzYIu2NEjdiPa9oSfXeqfNdWH+PjHxmffltf0tx1QQVrRMZxTb7AJAgHok83Nj5BCxcs6qMGnT22P6OoPrTgaBrUi++5AGZ9mUI5Zq93sUgyNfk8wMXgb1ApUqFOQFdgofxJ20+n0odqlr6AZxFF/VytpwYY3B8rSu1Yv56R9S9E4O8tEN3dY179cFAHvhChImoTBM/D82MlCN0J/10mx6xQov4UiozG6mkla1CHAKfPCnfNkLdevPOiuaTdtI2chHOPZCLiiaJ7xix2bSKM8wjspch4q71G7seumgJ32rXZPNp4wRJNMe2nV1jd2+Ino81FL9kF+Y+eRvhrO76OJ1mruMbxAxCKt9VE6o0C3LCMt1lkL+aNsK//JqPrAI5v5y5Ntq6yif48+0bZPM+v8ydZ4/OZnZAGKEHGrcyGW3ysJUbYuUH55RHN2Kg3/OM6eri1vxlfmqXIE5jN6U/jgNNikcbtz71T9uWdv8t+VfeXteOJzHr49pVtaM4wuLGa1BL0pWKlrX9lqaeWnUel67RK93sM3b+ik3Hdp9Wrw31l/D79Ro3Fy4HcVUfQ+X0qdDq1y8U9nJ9KvPL37WhhMFINpPYuSCvqaPOIwnjsFO5gk4LEfwL2u/rUUMSG5QI/MA8l/uDjJEP5lgE4lMYOTmGAHtMqonH2Y4sVMMuT56dMQctqc8nx4PZvoWGPkx75HHGwODr0T6USmAej7o4Zk25eIL9Nul9L13S+amraTpxUfAH7+KF2GDzMOvJ/sXk1Z2qSESkhob3XwkxFN+SEZeRMUts6bZY1gSdM0zZQqGHzg3CA4b4SympmXMrj0Sd106WgiAed+kpu5Nz2+Wc3yceHcO8npz+loIiNf5cA35+Xp3p6vRvN77paPpXj6lM6VVZEvqCRNN+eRp9VrzWks9To77d4mjpPwsDL2nQ0i2qY1VOnG5ukCMiCERqoTNA/V4QOiNFMbpw8pTKJwIS5+R3Nk6Kr+9n0/oRfPVQXHeY0MERp8qF90lRiaIA8tEKnUlxJO0cU0uaySeS6SoGq+bBQhVHlBAvWvP/csahlVNRG91TIrJGaSpEA81xkVMana+PDIiDUfP03MPL3M/hKNyFNex69laHLL4LHxWMMk6A7mPVKEMRa3kl4oFcvjJmbxGSv5tAYajswm3ObqKxlUiUYWScRINZqaNbQ3KD0RSVKBLLrAJD0GpsxITmRt0psPZaI5mXI66Z49+x5tsjxT+VARTXBgesZfDHHMC40KFvy0Jo4RY/sAEB8+e1cQTVSDRcRWLR+6H0dh4p82j187AmJZSxenISeTFCE0ZjQ2K3ATEL8GxSCtp3EGAD9pfadeR1U6ANGz1dPL+53A81jK2xRsjvPSwlhdW6piPqtjA46+8JjC0Hg2p2yXIWYrnjU31GMSmeeLDkFVCCMtwsA2xpccqxAWMfZPy73XtaVb1xI4r7RfPrcumHqKMFTbWZgjAb88mkPiSigS4Rn9DC8wlezP1ClVjVfXixmrRnY8QIwAJ1/0CFfp+gplh0ejQVFTPfwMKGqBRUmSrucRHeJFW0Hy/C1TOWtNkv4Jh0qqEAs/j8DqOlWTMClfAUSOprq/edy3Vz6fwv3pOIWRUehSF6/QJCvoWIFsKgh8UHTAFarTVhhiRJKdRUlWYrmx7C0QPalNef9DX6lDakmSWkiiVqoVrTnF8LshoEoqWqaog6cnZRRULX8jLEk09z8W1wx5jY4g3/2AyWRFwboXJOGq5BM7QWmqijoMiTGJoMyvftWPsIkBjZA/WA8ySeJX4Mb2SupS9XymIMlUk4ypJkDwhD0MKJkKkqbeQU9d1VUnUtjgg0IJikTl71P43vAebGJupI/lKCTswhvRTmE2S6FedffJPm2jkA7NUAf095bTzeUGadBM6fAxFu61JgmBlHMPphsMja1kv1tyjuPZokbdVMkfyyTAunI+qRWeehw6iyfdX95nfm/0oJh4edVyOYsio68ZfqChr/H8kM0xqqQdprrSeEWTMO/5FDx9Y95xqssdDHnEQ9CiKxDooo4NEV5fBS/r1/W5T5Un9wP29bymJ+5wmSnCyXYvPOWi2OIJkoxD5Gk7kyp5cVF3KfxisqZ+SHAkPXhsD8o5aoTuXnywpdZRpX9Il+AsCJZwolrxjmIuxpvHSKJnBlhnlR15PHuzf48qodx1Nv3eZ4QBXCdF98vMlJlhjFjsBYe3qBKsW8bU/l4Xq06uGlx9iLw1Zda9Haig9XRfx7c3r1UlqqfK2E5Zd9ebiVPtz40INEqO5CxrzSP2hU1RMMnf0HmnPSywcnMdm5bk02Ez7RBQs1nEiBU8fmc9e0PHqs7d/rQdtf0Rw/66VjVDMITLNXcR8WLPmS/qt4wTURl+YYaKXNWzGhJQuCS01MWPEVsH/Yjv1STBEqrOxvRUFT5ohO0iTGAK3bgkzslRpMnTJHBe75b8NA75EZIQ5r70evyr5n65YpLhuEvCJAdSvam5WZWcqIlkVwG22vl1rB9SUGSe5SNv6OFxA1DQSWGmV/RStGNK0s6N9Gus1MSkyH6W5Xt9iON3Mknv0/z5gmti60gGNzql66O27QXyN7s3jTpTVmO42ktk60gGkw96ukJvebIXFwxslCfZ8VL2mhfMsHDYvkFsI48/XFSVvGuyum1871w2RlwnSRunQu9aRivbvemYXF17O0kU4ppgSLP4FJKY2K3rbiaJstsJphgsR+69cyXB8XecDdKoQ/1O3vSlNINlV7Mq30WS2g3rndRroPfsiPN6rRFO1ERKyQdxiT/UC40wDfhfgBOM7EyjIU3wsRoF/O5dHsy6alXdBwzxSdJKPJhUf5Akbx816e6L8nEKhTdNbeajUTPlgf+rJOFmyAo189jU7VmgMg3ZRAECjcmMxe7BhpeWC1xByjQK22jIUCrRVfWaivh61bSBlODt9mzFiCR524QPqudIcEkbiSWdQrFfOZpOBNy5UhrwqKnTempF/Wa9imM21ZYaVeQ4lqESGykpedtb2Daylq2LzzE4wgKOvaxiVeHueAyO8ullTssGQ7HlZlloc3jjeA87JRUvezTZ3hXcqAuxWlkb2jyYWb9XlRTs/R7JuUE/XRcHr7ikHM2QQ+H6SeEfjnAcNIQlwmbE5EqXaEqh0+Iwp9g9+kuw5C0w45pNut4Oef4JVsyf+7xNNchnGeEU9WcMCmrz/hysqjfg/OAiv1PqoO/dAc6vnUhjRsSvVefJgK1Gbpro0+Oq4rMCHLtlpjNQ7GljUnU3JEjeBNUref8gtsGbNxayJtpSa+gtzdIz8SHevJfS6aY7B7Kg3vznyMmbsDL5AJJ4KZ1wz9J6oHlayfmEvRz15cHwfDwn3ooHH+O8rpq6wj6HbTcBO72YpUXV3uuqVXYUPFxqRdFsostrcOdKu08MNL7VMclbMzjh4ogxXfIHdvpHfEwaPiWxZeqP2mmgwladlURelaev4cbUyb63KpO6sVWJMoQJ4CA5syV/khAaQhKpk32XnbUKsizloPKTrdREyTEFm8z3C4TZaCYkiJRstH1xGxqtR6YUiVWwXS1QI4AkTHGfzwXNWdOkQvSAPdw0envF6yXPhCFv1MJOF2OJcTVZnaWnfOLOkGYmWN2vCgSFsFZpqJKnhGEDj8xo5m2ZQvlJ0ehmKpBQZoSwRbFDPfvfxtSAxVZO8asJb0kJ54B+P1mvjk2kTKQV0Y0FuHrHN7KKYrg6rK5x93M37VV5Q5acZaFtUykEyF0UAC+uFOiSJEgvbKaH/pxIbtbNwUGbVgZXYSZA822c2wO4snC28OU7pBbYjIVIDQ5skWRjh6xINosA94NZ++O7YgZ9/MFJJV2yTSrZTdfMwhtkE7i6Zlpc18AusATDFRXY+scEL2W9HFZc26rku7rpRlZgS4lYN1PbNvyfPuKYums2OEASXmxuXebJ2OTcm6rwmXfKbRt+f062lKm8ThK4sIu6yJPlt3o7YIGvE1vd0HRJJk+H9aa4SrTEKBwz1x3OgXmwdsTAVFdSxa5BWpMErpmkhDaHqwpFU4XUhRqHXYrU8k/ej/BikuyLiySJO/0URhXVqaA/nAT3xpcqUmDLV2yFclWX8IsUiQyvgNln7i+0LTcWvqlCG1yEE13HrplgEfqLl5KkM9W906CkfitrrCJltwI2qas2H6BdX5abIm44LCMcJQ8/m3UBrilJ2D2F0UkiLqtMftHexEaTFAsoH/1kmWRFcuq5K30Snx627lmx68qVRB6ppauuTp6bStfgnhlMzq0QtbFjYbplRnjGS36ZIjhkrIyctLDQIXdZ8mq+Vwz0uAZFkj7NppCSbPjpyCCXhSZBKGxAtZMhiRzCASc2d+MEUxPZkCSpVmjmZOum4nD9xE5x9NbwKkUrb9/Ni27U1jKG9TjIQNClCYaDJFFTo6/okbV1ihYG6+sOHCmyZAKhm3B+5PzsJtHSuSA4pJM5cF1wYq9Zcqs/hBwgoFpzxMqhlxqGtjZSbn926S2Os628eDVJ7DX3vdSx0hFb+KbOE+kbPiZaZB3Gy+hFyDXdXPbaCkPTG5ZZZK6Y3b0OjegSQSbZJZz5qoaNXhNqVSZuH9AGZVkXYHec08FsB4oOvm447LC7RZkUQiRK9zUD9TfPBzbg5E2bpIA+hL1OJKHX1GtR5onqo9smn5zU9e5G6dY2qeTmAknya4qEpEhagJ2M1E7xbnAwcp/I3mwJjpAbpq4583kmkqHR/ebgZEOrcehS9YBukQSK65oVIFWfkl2LHOo+6r1pqEm2eod5IcuuEUSuTC1TzAii/tyB0Cw93j48CvUZklw7GW6yKxJV3vTXNkT/TigkNeNRf95OEund0tjjVUszwJZOXPDLLm7UMn2O5RA1zqmLh0iSYjo9t6tup4rw4xaQ7wNMcheMSAyXvB4TMJTo9DYYyyabCZr6168Ulo59nzrq23ZEEq4lkzpES4KtCP9l2/t3p8EUioARkTV2j9xkuSACV3+kmU+vIj4lCnblR35xT7MNCU+Rt2bye+SGYw0/viGapv1P4wK/Ls65vENbde3opvLIRRXiHgWSdlKhtiOqjVx59OW1rp1Rj2PoIicu7jHB4hWt5DLMk5vIru/QltuBkIAicj1wVdzni7ygu15IdhluGh2H7V12iUw8ktxjglP3uNnCaPRPrrBIndcWKPi1u2GPySbcvK5uYoskAzvZGcl1zjbmw9pta9AYTzaeehV3OWhpZ1Yc7eUacFvb8q0EWCtybYtNDBjPCN8X4GS7OiGjWHCea0LgWPnNfqyTXsGOD3MSkXcSs/sCHMIFpO3YUjXAv261++kSZq3mmUITeed7dWeAQ7C/Ih2fGNsh5Ubv4drEVTVDSS18HLwkaJWk6PWaHYY03kk1BcAdThHYq+bpbltBnAxA+2PDIa7WFLOXkwSjPUjinrCeT00WDcuvdtrY6qzmRzhQmjUxnJPqPl0iVGYnqxJMLZGRrJ1fYylyARey7UlYaW+nRUkyReDg+i6LI9UIdjuS+Psehb6+ngcFzXkbd12ySdfYDbOsiZPmEnfBrVLXCxk8x2aURt9f7wVuuhsG+kyTxUfTpiQ9vRgO2x0k0WTANEWdFZF1rPRApR5Q7UnjbavZPIBW2xuJrXX8lZiaoki94/ilghdxcQJut5h484+vRi3QzXB8rV3EC2OcTIYde6yXQtYU0hSz2MksqQf4VBR9NdfL+hn19m0kj43fQ5EdpTtaYZ9qiflzUUX20aQTcpxW+F33MdwiDIVOGiQuUVXWlh7ZAd1VNXqWDNSe4Tpqmc2o7mVJcst+KKdOvBLY/EV4iaFIpTkjF0YrZ2XMYld1r+58zyBK7g2sN3hjmaacceWPGBnhurmxBBstFmXMWgHwlhDcaDnshi2Mg6GLBK7dQBLiAj1ZcrSvdyXlC/aJgx2B7RG+Yx9DLtqpKDROwedlwSEEBwvk07+VtZW4WJ2JuAi12bduroWjku8hNMVVmZ3sx+8iddtvkkRSA+je16ACA76Kz3+JxDA8tlweXYuuHe6ejsKoaEfOI5GkFrdRQ/cyYSK4hKXLG8M5slMGxlYcH/B3cDTBYIpgnyfJAkIiuGoaOGV12PdH7cphqX8iYAXclro+Pm+Rt9DGIQnLhDoZomWKGBdFTJoEWMVFEElwcDgyf2LpwzBEUq83t9MgjID8wDJYGaksEkmG5hkZNFWwEUjCy9vjw0w6uxS1LIlcH20cz+f2EGooKUI13631d9LxlzJDypIshrs8HxRrx/zJBmhdIRzBe6WCl3nFZHqmrqt9SWnwgrRQ+c+6IHusMFkYqCqO9zrkEYrvI7T5gTIzRYH6tZD/gTIkBqoHRci4uaBEZLHL1vI2RuG3rFg7D9tfgvtRFgf0UeZF2xh1JsUgDfA+PF2OmKal7JCJYhk8E/vhXB6KR/2Bu+8T5S05raaKoZL6CFWKGTXUg7DI4KwsPV0OlEJBsQngCaQgT5Xq9HG60RBqnButevIqLuY1CfFNRkYvPC8yW0ZsNMxKtMMZKUMQy0qa7ptHfYpTpIka9rQYvDKBf6YCTakJPH5MIhbjwPCfZNJLK6WSlYcxhmoWeQe1iyOe+iRJTEyBBtsjS3FD9RITYdjp9LRutaIzy5bLWYFTDKZpghdQEo7Xsy97q+lI3rYwZ85Htx3YLkKY3pSUPBbSJbGKm4VnyU38lu19szld1t1QwCHJkS6cYbpMqVvHjR7v7uX7CEAsvI2VA6kaV//qItppROBeBJtdOZAEBEGj4t4BMcdOrphcILJ4RJfMjNfDeRzElKFCnwLQOHjYHw1JPYHgj5+hR4a2uwy+AKTV3g0NJ5JaikoLpxv6iEVw3CJyODFBT0EVsy8sIXD9AlC3FCQKXdCX4WVJRZDKilYTG+NfKcVvXuIJVERt4YS+WmJCiy6ZkotiPYETqLEpj2hSJRvS4ZVKQ4TnWUpazYb5urL7CorZgI8KjsFNn4/TZGnVsEVxWfNfl+rdLMGiTEz+pcFMfLN7zTBtE1OxTr2IGr2HYrOC82Mefa7//P6qRTHQB8F4WNidMiTkMYYJyGWgxF5soyrx67zqGX+aps3g6BlODi84wdpY9Kbh9StnteLItJoPjuOhryHJNkjpx00y9oQqPXH0zAQUGxqgyWuYJATF1vJtTPODGc9WPktyisj7E3iguGZTn+gI57F2DHQQZJWgcWIxsPYirsTiRAtv2qjQlWWz9kp1ro17IoW1POYoB13c6N5h/FgtM5Ty7WRa79Kln5R2AyudDc3nhxVNFH6Q3cQrReZhT9ntbt0qp1OjPy1ZwUahPtuR1F1PmiLOTYO5WKNjhiiXKFLrEwTmZOhNjVui3sB60hS6iiVjOubhr6KIeoTpb2XxIt3qeCBX0QVxL8bLrJPMzjCUvCNeRRFZz+oFgCXx9aRDRZ669eTEBoI9eWmF6k9mWatV9GzLZXJol26DmB8Ek3k5jA10iOJsBRkDPBMRSy2MupRLgVwAdYUJ9qDIOMX416pQXAAFME+xoguXvYgi0oHOl71f1FqbaL77IRAIFNxhOHvzbBdWGmSJBIevKIIB937GI9TUmqVWIoXeBOYXYvALo3CwhD+yegV18QBFFkl14thTkLQEqYzlhTkuQDcTa7FnFyBexPcaONyefT4ZQottpTIzhjNpNqcBy3zRqbcgg0gBn7Dez+ZWFkMDfhl9jEKQ3AgnWXIFJX7aInPKhqeYLlWLKxTJs1VuqebiWfO7+n1sR8nn2eOFfDgiyUmYaPWo9O1D/nUMdUIuSQ0+YJGtp43sKWgQzU8Wqx9dclY0DqcsOLW2F/0SmVu3oJHJCiwVBHpJznE3+IX8nlRBH2x7gJKHM8UnVrvu+ZUsP5rqsNsv4dpAOMKqfVXvVrkjsfYS3I+qzEpasn59lMjwzFUqI65ataqBox9eLb/GrQqrJTMsFfLbXg/C0yQU/oEX8yrfnqRcdKe0VB1kH+ngl35slQv9wq+Hn6y05RjAy1sNpXLOIBTgStHZ+xowSw2UrG0Zyouu0uXz+QnaAEVV9LiZbN0uGFgVImbslBpOE/lar05Y0qzATsSdMVFJ1FCswb3VS5o305avXqop/VWrP7LFK6MR5ynUKmwiYn+DFUTmeeO+VVkag1yiumVm2nUKEZ0JEo/PkS8NisrDPZQB52S/e9cSayIXTSiEr1Ladab/YTYXvCwUxPXMXKmAEOrJ5LDUJm9Y3lxXSq+YbirEgZE0sCw5RP71bZDynG6mSukl8mhmsG3YINeiHOstJEHMRiHptsZFxl9ksTUtxwebqRdTmYLoH6oGSss831dVuK8A880Lralm5GZb7cfzxB/GeOXLSWImpE9PwtYmF8PxGmaOgxKtQmYW5MIGmwbX3r7Elmm599pFF7662Gi10C4qLML2+vVqRIcYK2UKCxhr5r3JvxFaVTh1SCO0rtzPRHdk8iFgJSbq88UW0Dczu+S1aeFZ6L94kNnfcyXQM8nh7ppUhWJY06juTiQ+m83SvNlaQ2RbIyxhvt0BRayodu+xN3xWXwKLGncNY80kR7gryfW44H5N/VRpGjGrphXrm/PNmRemnFA9Fd2961S+tywW6k/Dv77k1FOdA3XB0uTySr9GzFya+dWq4kK1gMIe83ovPVzCd288eTV7VWIpNzPJ8QwBdz6GmLQ09+Jobb/nhkRsVj+DLUcmgZK993HMQrta+BcmDeDVB1Ei1szlcZE4AKwMyUqBh/Zkrnz+9xwqaM0X2tWmTZTW5cv6oNoFYz7sBGQSMarUyXxh20rB1m4SO5WQJhp1KD+DQ0A6GPPHnRxIJzk8GHn48lZZNA1/e6/9UrFUsDNFgdJZTZAmpXm9+5Sz8tyUn7abm5RwXV0WLJ1R/zRbatj9kkjIgnz3oUdn7j0umdKN1l/ZSLeFYHaknrC6I1sp2Hw2EkXsPvbIoG5iauoFXpnrTKs2OpxgzTrgKMAvKFg4vMV1vx0p8Hwk4d0ftOchgi80SJKq0La2Wigo/a898cwO73TLbot7Jn89W3j6+7DYV6HyIEoMHVaGGGbqJSdp9i5HlR7pwmNYS3wdoJ24jTR1HiIJOmpVqerulzno0lewefaCKdO7eEP2PDdTSc5GeccKijMFACY0LpY2ZlKwqjeSZLz6eJJgmk8sSrdKsj1WQoXE5Uq/6FYEXlZLlEQ7K3vV6nJL7uxjTLIqznJTfDTjhE1DiCQyPNozT7A8hap7cKWnWgj6X6GHGwdTuJvAtszzAMrMffItPFbTloz0YLv/3mHVjBXoNkn2IUfNhwScZtaC9J9QINf34mTbgxuXLly2srsOXlCJj3z3Dxyx6T7AGj1ceP4aYMvUWJwy+68pkAuloVtZBFgrXhQzuhzMYBXKP0IPnajabQ+nX2cnYNa4bjrzy92/f2RjqM7++Nl9hUVhckcTUUj/BIcU1Lu/cLxh0uhkLPrAbU1m/Tdo4fjBTH2RXUqZEyQzcK36W7RYTbSrXWaYYm3WnybG9zzQx/xHOAaH28wVZ/13aeEaVACO5fFiYI+jXnFGwPGPUIQ1UPXAB8FPOJyXY9d+RXPGsMhisdsJ5GgNyv8ESZqS0+PA677lTPQlkkb0tO9hWsieY0TD+yOr8cd/QZXgsFWo+VDW/8P7cpD7rvK+/O13VDZiHbG+m4v/nfaiET1n0FT/PkngiHvQKmgYTv8YsB4L5FI0zn4brlrT8GdVw1G6+r4SQ3Uc6L8vN71gvKlEU1dQAY5vFnry1GkQanRT3cPPwHen/oRsM5TVIPLdX/Dj+RFHV9FTxfqBgtwW8MN+e8aPcsd1/7/6t4HmxJFtfrHLCfI/oE0Yq3+wjxdVBQ68P1Z9jzFx3jf5j9z59NOjWuW8B1Qt/A/oERvd1gadZTsc841TVwBHYcmhcdLqAvzIH7Hd7k+FefVl950BZ9/o5o8HfPXNpKr/PKm+/HMj93zP93zP93zP93zP93zP93zP93zP93zP93zP93zP93zPv3D+D/YCPKyi+llLAAAAAElFTkSuQmCC"/></defs></svg>
-<div class="wrap" id="main">
-  <header>
+<div id="app">
+  <div id="hdr">
+    <button id="openLib" title="My plays">☰</button>
+    <div class="brand"><svg viewBox="0 0 106 116" aria-hidden="true"><use href="#tlogo"/></svg>Playbook</div>
     <input id="name" placeholder="Play name (e.g. UP)" autocomplete="off">
-    <button class="tag" id="courtBtn">Full court</button>
     <span class="tag" id="phaseTag">Phase 1</span>
-  </header>
-  <div class="chips" id="optTabs"></div>
-  <svg id="court" viewBox="-12 -12 524 491" xmlns="http://www.w3.org/2000/svg"></svg>
-  <div class="hint" id="hint"></div>
-  <textarea id="note" placeholder="Explain this phase in a sentence or two (shown in the PDF)"></textarea>
-  <div id="editBar"><button id="editPrev">◀</button><span id="editLbl"></span><button id="editNext">▶</button><button id="editSave" class="primary">Save</button><button id="editDel" class="danger">Delete</button><button id="editCancel">Cancel</button></div>
-  <div class="tools">
-    <button data-tool="move">Set start</button>
-    <button data-tool="pass">Pass</button>
-    <button data-tool="cut">Cut</button>
-    <button data-tool="dribble">Dribble</button>
-    <button data-tool="screen">Screen</button>
-    <button data-tool="handoff">Hand-off</button>
-    <button id="shot">Shot</button>
-    <button id="undo">Undo</button>
-    <button id="clear">Clear lines</button>
-    <button id="def">Show defense</button>
-    <button data-tool="adddef" class="addDef">+ Defender</button>
-    <button data-tool="rotate" class="addDef">↻ Defender</button>
-    <button id="openLib">My plays</button>
-    <button id="saveBtn">Save play</button>
-    <button id="openReview" class="span2">Review phases</button>
-    <button id="next" class="primary span4">Next phase ⏎</button>
+    <div id="hdrBtns"><button id="courtBtn">Full court</button><button id="openReview">Review phases</button><button id="saveBtn">Save play</button><button class="primary" data-proxy="pdfAll">Playbook PDF</button></div>
   </div>
-  <div class="chips" id="chips"></div>
-  <div class="legend">Pass = dashed arrow · Cut = solid arrow · Dribble = zigzag · Screen = line ending in T · Hand-off = line ending in ‖ · Shot = double-line arrow to the basket. Dashed circles show where a player ends the phase. The light green border is out of bounds, for sideline and baseline plays. + Option = a second ending that shares the first phases. Plain red circle = added defender (only in that phase); the arc and white arrow show where she is facing.</div>
+
+  <div id="lib">
+    <div class="libtop"><button id="libBack">← Board</button><button id="libSave">Save current</button><button id="libNew" class="primary">+ New play</button></div>
+    <h2 class="libh">My plays</h2>
+    <div class="field"><label for="team">Team</label><input id="team" placeholder="Your team name (shown in the PDF)" autocomplete="off"></div>
+    <div class="ok" id="libMsg"></div>
+    <div class="hint" id="libStatus"></div>
+    <div id="libList"></div>
+    <div class="libio"><button id="pdfAll" class="primary">Playbook PDF</button><button id="expBtn">Export backup</button><button id="impBtn">Import</button></div>
+    <input type="file" id="impFile" accept=".json,application/json" style="display:none">
+    <div class="hint" id="backup"></div>
+  </div>
+
+  <div id="stage">
+    <div class="chips" id="optTabs"></div>
+    <svg id="court" viewBox="-12 -12 524 491" xmlns="http://www.w3.org/2000/svg"></svg>
+    <div id="thumbs"></div>
+    <div class="legend">Pass = dashed arrow · Cut = solid arrow · Dribble = zigzag · Screen = line ending in T · Hand-off = line ending in ‖ · Shot = double-line arrow to the basket · Dashed circle = where a player ends the phase · Light green border = out of bounds · + Option = a second ending that shares the first phases · Plain red circle = added defender; the arc shows where she faces.</div>
+  </div>
+
+  <div id="panel">
+    <h4 class="lbl" id="drawLbl">Draw</h4>
+    <div id="editBar"><button id="editPrev">◀</button><span id="editLbl"></span><button id="editNext">▶</button><button id="editSave" class="primary">Save</button><button id="editDel" class="danger">Delete</button><button id="editCancel">Cancel</button></div>
+    <div class="hint" id="hint"></div>
+    <h4 class="lbl" id="noteLbl">Phase explanation</h4>
+    <textarea id="note" placeholder="Explain this phase in a sentence or two (shown in the PDF)"></textarea>
+    <div class="chips" id="chips"></div>
+    <div id="rd"><button data-tool="rotate" id="rotTool" class="addDef">↻ Rotate defender</button><button id="def">Show defense</button></div>
+    <div id="bar">
+      <div id="toolRow"><button class="ic" data-tool="move" title="Start"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="6" fill="currentColor"/><path d="M12 2v4M12 18v4M2 12h4M18 12h4" stroke="currentColor" stroke-width="2"/></svg>Start</button><button class="ic" data-tool="pass" title="Pass"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12h13" stroke="currentColor" stroke-width="2" stroke-dasharray="3 3"/><path d="M15 7l6 5-6 5z" fill="currentColor"/></svg>Pass</button><button class="ic" data-tool="cut" title="Cut"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 17C8 17 10 7 16 7" stroke="currentColor" stroke-width="2" fill="none"/><path d="M15 3l6 4-6 4z" fill="currentColor"/></svg>Cut</button><button class="ic" data-tool="dribble" title="Dribble"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12l3-4 3 8 3-8 3 8 3-4" stroke="currentColor" stroke-width="2" fill="none"/><path d="M17 7l5 5-5 5z" fill="currentColor"/></svg>Dribble</button><button class="ic" data-tool="screen" title="Screen"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12h15M18 5v14" stroke="currentColor" stroke-width="2.4"/></svg>Screen</button><button class="ic" data-tool="handoff" title="Hand-off"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12h14M17 6v12M21 6v12" stroke="currentColor" stroke-width="2"/></svg>Hand-off</button><button class="ic" id="shot" title="Shot"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 10h12M3 14h12" stroke="currentColor" stroke-width="1.8"/><path d="M15 6l7 6-7 6z" fill="currentColor"/></svg>Shot</button><button class="ic" data-tool="adddef" title="Defender"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="13" r="6" fill="#e5484d"/><path d="M8 5a8 8 0 0 1 8 0" stroke="#e5484d" stroke-width="2.4" fill="none"/></svg>Defender</button></div>
+      <button id="undo">↶ Undo</button>
+      <button id="clear">Clear lines</button>
+      <button id="next" class="primary">Next phase ⏎</button>
+      <button id="moreBtn">⋯ More</button>
+    </div>
+    <div class="kbd" id="kbd"><b>Enter</b> next phase · <b>Ctrl+Z</b> undo · <b>← →</b> previous / next phase while editing · <b>1–8</b> tools</div>
+  </div>
 </div>
+
+<div id="sheet"><div class="in">
+  <div class="sh">More</div>
+  <button data-proxy="def" data-sync="1">Show defense</button><button data-proxy="rotTool">↻ Rotate defender</button>
+  <button data-proxy="courtBtn" data-sync="1">Full court</button><button data-proxy="openReview">Review phases</button>
+  <button data-proxy="saveBtn">Save play</button><button data-proxy="rvPdf">PDF of this play</button>
+  <button class="primary" data-proxy="openLib" style="grid-column:1/-1">My plays · Export · Playbook PDF</button>
+  <div class="legend" style="grid-column:1/-1">Pass = dashed arrow · Cut = solid arrow · Dribble = zigzag · Screen = line ending in T · Hand-off = line ending in ‖ · Shot = double-line arrow to the basket · Dashed circle = where a player ends the phase · Light green border = out of bounds · + Option = a second ending that shares the first phases · Plain red circle = added defender; the arc shows where she faces.</div>
+</div></div>
 
 <div id="review">
   <div class="wrap">
     <div class="row" style="margin-top:4px"><button id="back">← Back to board</button><button id="rvPdf" class="primary">PDF of this play</button></div>
     <h2 id="rvTitle"></h2>
     <div id="rvPhases"></div>
-  </div>
-</div>
-
-<div id="lib">
-  <div class="wrap">
-    <div class="row" style="margin-top:4px;grid-template-columns:1fr 1fr 1fr"><button id="libBack">← Board</button><button id="libSave">Save current</button><button id="libNew" class="primary">+ New play</button></div>
-    <h2>My plays</h2>
-    <div class="field"><label for="team">Team</label><input id="team" placeholder="Your team name (shown in the PDF)" autocomplete="off"></div>
-    <div class="row" style="grid-template-columns:1fr 1fr 1fr"><button id="pdfAll" class="primary">Playbook PDF</button><button id="expBtn">Export</button><button id="impBtn">Import</button></div>
-    <input type="file" id="impFile" accept=".json,application/json" style="display:none">
-    <div class="hint" id="backup"></div>
-    <div class="ok" id="libMsg"></div>
-    <div class="hint" id="libStatus"></div>
-    <div id="libList"></div>
   </div>
 </div>
 
@@ -337,12 +430,16 @@ function render(){
   $('#optTabs').innerHTML=multi?S.opts.map((p,i)=>`<button class="chip${i===S.oi?' on':''}" data-opt="${i}">Option ${p.label}</button>`).join('')+`<button class="chip red" data-delopt="1">${delArmed?'Tap again to delete Option '+ao.label:'Delete option'}</button>`:'';
   $('#chips').innerHTML=S.edit?'':choosing?`<span>New option after:</span>`+S.phases.map((p,i)=>`<button class="chip add" data-after="${i+1}">Phase ${i+1}</button>`).join('')+`<button class="chip" data-cancel="1">Cancel</button>`
     :S.phases.map((p,i)=>i<ao.at?`<button class="chip lock" data-ph="${i}">Phase ${i+1} · shared</button>`:`<button class="chip" data-ph="${i}">✎ Phase ${i+1} · ${p.lines.length} action${p.lines.length===1?'':'s'}</button>`).join('')+`<button class="chip add" data-add="1">+ Option</button>`;
+  $('#noteLbl').textContent='Phase '+(S.edit?S.edit.i+1:S.phases.length+1)+' explanation';
+  document.querySelectorAll('[data-sync]').forEach(b=>{b.textContent=$('#'+b.dataset.proxy).textContent;});
+  if(!drag)thumbsRender();
   save();
 }
 function toSvg(e){const pt=svg.createSVGPoint();pt.x=e.clientX;pt.y=e.clientY;const q=pt.matrixTransform(svg.getScreenCTM().inverse());return {x:q.x,y:q.y};}
 const clamp=p=>({x:Math.max(16-M,Math.min(484+M,p.x)),y:Math.max(16-M,Math.min((S.full?FH+M-16:H+8),p.y))});
 
 svg.addEventListener('pointerdown',e=>{
+  const ae=document.activeElement;if(ae&&(ae.tagName==='INPUT'||ae.tagName==='TEXTAREA'))ae.blur();
   const p=toSvg(e);drag=null;
   if(tool==='adddef'){const q=clamp(p);push();S.dn=(S.dn||0)+1;const id='D'+S.dn;S.players[id]=q;S.extra=(S.extra||[]).concat(id);S.face=S.face||{};S.face[id]=faceDefault(q);drag={kind:'player',id,off:{x:0,y:0}};render();}
   else if(tool==='move'){
@@ -530,12 +627,14 @@ $('#courtBtn').onclick=()=>{
 $('#next').onclick=nextPhase;
 $('#editPrev').onclick=()=>navEdit(-1);$('#editNext').onclick=()=>navEdit(1);$('#editSave').onclick=saveEdit;$('#editDel').onclick=deleteEdit;$('#editCancel').onclick=cancelEdit;
 $('#name').value=S.name||'';
-$('#name').addEventListener('input',e=>{S.name=e.target.value;save();});
+$('#name').addEventListener('input',e=>{S.name=e.target.value;save();libRender();});
 $('#note').addEventListener('input',e=>{S.note=e.target.value;save();});
 document.addEventListener('keydown',e=>{
   const typing=e.target.tagName==='TEXTAREA'||(e.target.tagName==='INPUT'&&e.target.type!=='file');
   if(e.target.tagName==='TEXTAREA')return;
-  if(e.key==='Enter'){if(e.target.tagName==='INPUT'){e.target.blur();e.preventDefault();return;}if($('#review').style.display!=='block'&&$('#lib').style.display!=='block'){e.preventDefault();nextPhase();}}
+  if(e.key==='Enter'){if(e.target.tagName==='INPUT'){e.target.blur();e.preventDefault();return;}if($('#review').style.display!=='block'&&!document.body.classList.contains('show-lib')&&!document.body.classList.contains('show-sheet')){e.preventDefault();nextPhase();}}
+  if(!typing&&!e.ctrlKey&&!e.metaKey&&!e.altKey&&/^[1-8]$/.test(e.key)){const b=$('#toolRow').children[+e.key-1];if(b){e.preventDefault();b.click();}}
+  if(e.key==='Escape'){document.body.classList.remove('show-sheet');}
   if(!typing&&(e.ctrlKey||e.metaKey)&&e.key==='z'){e.preventDefault();$('#undo').click();}
   if(S.edit&&e.target.tagName!=='INPUT'&&(e.key==='ArrowLeft'||e.key==='ArrowRight')){e.preventDefault();navEdit(e.key==='ArrowLeft'?-1:1);}
 });
@@ -616,19 +715,40 @@ function fromData(d,name){
 function libRender(){
   if(document.activeElement!==$('#team'))$('#team').value=TEAM();
   const box=$('#libList');box.innerHTML='';
-  const bk=+lsGet(BKEY)||0,changed=PLAYS.some(p=>(p.updatedAt||0)>bk);
-  $('#backup').textContent=!PLAYS.length?'':!bk?'Plays are saved only in this browser. Tap Export now and then to keep a backup file.':changed?'Changed since your last export ('+when(bk)+'). Tap Export to update your backup.':'Backup up to date (exported '+when(bk)+').';
-  $('#libStatus').textContent=dbState==='off'?'This browser does not allow saving (private mode?). Plays will be lost when you close it. Use Export to keep them.':PLAYS.length?'':'No saved plays yet. Draw one and tap Save current.';
-  PLAYS.forEach(p=>{const div=document.createElement('div');div.className='ph';
-    const h=document.createElement('h3');h.textContent=p.name||p.id;div.appendChild(h);
-    const m=document.createElement('div');m.className='meta';const bits=[];
-    if(p.phases)bits.push(p.phases+' phase'+(p.phases===1?'':'s'));if(p.options>1)bits.push(p.options+' options');if(p.updatedAt)bits.push('saved '+when(p.updatedAt));
-    m.textContent=bits.join(' · ');div.appendChild(m);
-    const row=document.createElement('div');row.className='row three';
-    const o=document.createElement('button');o.className='primary';o.textContent='Open';o.onclick=()=>openPlay(p.id);
-    const pd=document.createElement('button');pd.textContent='PDF';pd.onclick=()=>printPlays([p],false);
-    const x=document.createElement('button');x.className='danger';x.textContent=delId===p.id?'Tap again':'Delete';x.onclick=()=>deletePlay(p.id);
-    row.appendChild(o);row.appendChild(pd);row.appendChild(x);div.appendChild(row);box.appendChild(div);});
+  const bk=+lsGet(BKEY)||0,changed=PLAYS.some(p=>(p.updatedAt||0)>bk),cur=slug(S.name);
+  $('#backup').textContent=!PLAYS.length?'':!bk?'Plays are saved only in this browser. Export now and then to keep a backup file.':changed?'Changed since your last export ('+when(bk)+'). Export to update your backup.':'Backup up to date (exported '+when(bk)+').';
+  $('#libStatus').textContent=dbState==='off'?'This browser does not allow saving (private mode?). Plays will be lost when you close it. Use Export to keep them.':PLAYS.length?'':'No saved plays yet. Draw one and tap Save play.';
+  PLAYS.forEach(p=>{const div=document.createElement('div');div.className='pl'+(p.id===cur?' on':'');
+    const t=document.createElement('div');t.className='pt';t.title='Open';t.onclick=()=>openPlay(p.id);
+    const h=document.createElement('b');h.textContent=p.name||p.id;t.appendChild(h);
+    const m=document.createElement('small');const bits=[];
+    if(p.phases)bits.push(p.phases+' phase'+(p.phases===1?'':'s'));if(p.options>1)bits.push(p.options+' options');if(p.id===cur)bits.push('open');if(p.updatedAt)t.title='Open · saved '+when(p.updatedAt);
+    m.textContent=bits.join(' · ');t.appendChild(m);div.appendChild(t);
+    const pd=document.createElement('button');pd.textContent='PDF';pd.title='PDF of this play';pd.onclick=()=>printPlays([p],false);
+    const x=document.createElement('button');x.className='danger';x.textContent=delId===p.id?'Sure?':'✕';x.title='Delete';x.onclick=()=>deletePlay(p.id);
+    div.appendChild(pd);div.appendChild(x);box.appendChild(div);});
+}
+const showLib=b=>{document.body.classList.toggle('show-lib',!!b);if(b)$('#lib').scrollTop=0;};
+const isDesk=()=>{try{return window.matchMedia('(min-width:1000px)').matches;}catch(e){return false;}};
+function plusOption(){
+  if(S.edit)return hint('Finish editing the phase first.');
+  if(!S.phases.length){hint('Save at least one phase first (Next phase). A new option branches after a saved phase.');return;}
+  if(S.phases.length===1)addOption(1);else{choosing=true;render();hint('Click the last phase that the new option shares with this one.');}
+}
+function thumbsRender(){
+  const box=$('#thumbs');if(!isDesk()){if(box.innerHTML)box.innerHTML='';return;}
+  const ao=AO();let list,act;
+  if(S.edit){list=S.phases.concat([curPhase()],S.edit.later,[S.edit.cur]);act=S.edit.i;}
+  else{list=S.phases.concat([curPhase()]);act=S.phases.length;}
+  const last=list.length-1,box2=vb();let h='';
+  list.forEach((ph,k)=>{
+    const g={innerHTML:''};draw(g,ph,{ballAt:'start'});const u='t'+k;
+    const inner=g.innerHTML.replace(/id="(wood|cch|ccf)"/g,(m,x)=>`id="${x}${u}"`).replace(/url\(#(wood|cch|ccf)\)/g,(m,x)=>`url(#${x}${u})`);
+    const pick=choosing&&!S.edit&&k<S.phases.length;
+    const lab=pick?`After phase ${k+1}`:`Phase ${k+1}`+(k===last?' · drawing':k<ao.at?' · shared':'');
+    h+=`<div class="th${k===act?' on':''}${k<ao.at&&!pick?' lock':''}${pick?' pick':''}" data-k="${k}"><svg viewBox="${box2}">${inner}</svg>${lab}</div>`;});
+  h+=choosing?'<div class="th add" data-cancel="1">Cancel</div>':'<div class="th add" data-add="1">+ Option</div>';
+  box.innerHTML=h;
 }
 function savePlay(){
   const name=(S.name||'').trim(),id=slug(name);
@@ -646,7 +766,7 @@ function openPlay(id){
   if(S.edit)return say('Finish editing the phase first.');
   const old=S;push();loadMarks.add(hist.length);
   try{fromData(clone(p.data),p.name);}catch(e){S=old;loadMarks.delete(hist.length);hist.pop();return say('This play could not be opened.');}
-  $('#name').value=S.name||'';tool='move';choosing=false;delArmed=false;$('#lib').style.display='none';render();
+  $('#name').value=S.name||'';tool='move';choosing=false;delArmed=false;showLib(false);render();libRender();
   hint(`Opened "${S.name}". Undo brings back the play that was on the board.`);
 }
 function deletePlay(id){
@@ -713,11 +833,11 @@ function printPlays(list,cover){
   if(bad)say(bad+' play(s) could not be drawn and were left out.');
   try{window.print();}catch(e){done();say('Printing is not available here. Open the board in Safari or Chrome.');}
 }
-$('#openLib').onclick=()=>{delId=null;$('#libMsg').textContent='';libRender();$('#lib').style.display='block';$('#lib').scrollTop=0;};
-$('#libBack').onclick=()=>{$('#lib').style.display='none';};
+$('#openLib').onclick=()=>{delId=null;$('#libMsg').textContent='';libRender();showLib(true);};
+$('#libBack').onclick=()=>showLib(false);
 $('#libNew').onclick=()=>{
   push();loadMarks.add(hist.length);const fc=!!S.full;S=freshState();S.full=fc;$('#name').value='';
-  tool='move';choosing=false;delArmed=false;$('#lib').style.display='none';render();
+  tool='move';choosing=false;delArmed=false;showLib(false);render();libRender();
   hint('New play. Give it a name and set the start. Undo brings back the play that was on the board.');};
 $('#libSave').onclick=savePlay;$('#saveBtn').onclick=savePlay;
 $('#team').addEventListener('input',e=>{lsSet(TKEY,e.target.value);});
@@ -726,6 +846,19 @@ $('#expBtn').onclick=exportAll;
 $('#impBtn').onclick=()=>{$('#impFile').value='';$('#impFile').click();};
 $('#impFile').addEventListener('change',e=>{const f=e.target.files&&e.target.files[0];if(f)importFile(f);});
 loadPlays();
+$('#thumbs').addEventListener('click',e=>{const t=e.target.closest&&e.target.closest('.th');if(!t)return;const d=t.dataset;
+  if(d.add)plusOption();
+  else if(d.cancel){choosing=false;render();}
+  else if(d.k!=null){const k=+d.k;
+    if(choosing){if(k<S.phases.length){choosing=false;addOption(k+1);}return;}
+    if(S.edit){if(k!==S.edit.i)navEdit(k-S.edit.i);}
+    else if(k<S.phases.length)startEdit(k);}
+});
+$('#moreBtn').onclick=()=>document.body.classList.add('show-sheet');
+$('#sheet').addEventListener('click',e=>{if(e.target===$('#sheet'))document.body.classList.remove('show-sheet');});
+document.addEventListener('click',e=>{const b=e.target.closest&&e.target.closest('[data-proxy]');if(!b)return;document.body.classList.remove('show-sheet');const t=$('#'+b.dataset.proxy);if(t)t.click();});
+let rsz=null;window.addEventListener('resize',()=>{clearTimeout(rsz);rsz=setTimeout(()=>thumbsRender(),120);});
+libRender();
 
 hint(HINTS.move);render();
 </script>
